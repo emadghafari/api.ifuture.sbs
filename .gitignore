@@ -1,0 +1,9 @@
+/backend/vendor/
+/frontend/node_modules/
+/backend/storage/*.key
+/backend/.env
+/frontend/.env
+/frontend/.next/
+/frontend/out/
+/backend/public/storage
+/backend/public/hot
