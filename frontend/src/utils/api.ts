@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:8000/api';
+const API_URL = 'https://api.ifuture.sbs/api';
 
 export const fetchHomeData = async (lang: string) => {
     const response = await fetch(`${API_URL}/public/home?lang=${lang}`, {
