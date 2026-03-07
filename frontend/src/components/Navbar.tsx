@@ -1,17 +1,35 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useLanguage } from '@/context/LanguageContext';
+import { fetchWithAuth } from '@/utils/api';
 
 const Navbar = ({ site }: { site?: any }) => {
     const { language, setLanguage, t } = useLanguage();
     const [isOpen, setIsOpen] = useState(false);
+    const [user, setUser] = useState<any>(null);
+
+    useEffect(() => {
+        const checkAuth = async () => {
+            try {
+                const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://api.ifuture.sbs';
+                const res = await fetchWithAuth(`${API_URL}/api/auth/user`);
+                if (res.ok) {
+                    const data = await res.json();
+                    setUser(data);
+                }
+            } catch (e) {
+                // Not authenticated
+            }
+        };
+        checkAuth();
+    }, []);
 
     const languages = [
+        { code: 'en', name: 'English' },
         { code: 'ar', name: 'العربية' },
         { code: 'he', name: 'עברית' },
-        { code: 'en', name: 'English' },
     ] as const;
 
     return (
@@ -68,13 +86,22 @@ const Navbar = ({ site }: { site?: any }) => {
                     </div>
 
                     <div className="flex items-center gap-3">
-                        <Link href="/portal/login" className="px-5 py-2.5 rounded-full bg-white/5 hover:bg-white/10 text-white border border-white/20 font-semibold text-sm transition-all flex items-center gap-2">
-                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" /></svg>
-                            {t('nav_login')}
-                        </Link>
-                        <Link href="#contact" className="px-6 py-2.5 rounded-full bg-primary-600 hover:bg-primary-500 text-white shadow-[0_0_20px_rgba(4,120,87,0.4)] font-semibold text-sm transition-all transform hover:scale-105 border border-primary-400/30">
-                            {language === 'ar' ? 'ابدأ الآن' : language === 'he' ? 'התחל' : 'Get Started'}
-                        </Link>
+                        {user ? (
+                            <Link href={user.role === 'admin' ? '/admin/dashboard' : '/portal/dashboard'} className="px-5 py-2.5 rounded-full bg-primary-600/10 hover:bg-primary-600/20 text-primary-400 border border-primary-500/30 font-semibold text-sm transition-all flex items-center gap-2 group">
+                                <svg className="w-4 h-4 group-hover:scale-110 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                                {user.name.split(' ')[0]}'s Portal
+                            </Link>
+                        ) : (
+                            <>
+                                <Link href="/portal/login" className="px-5 py-2.5 rounded-full bg-white/5 hover:bg-white/10 text-white border border-white/20 font-semibold text-sm transition-all flex items-center gap-2">
+                                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" /></svg>
+                                    {t('nav_login')}
+                                </Link>
+                                <Link href="#contact" className="px-6 py-2.5 rounded-full bg-primary-600 hover:bg-primary-500 text-white shadow-[0_0_20px_rgba(4,120,87,0.4)] font-semibold text-sm transition-all transform hover:scale-105 border border-primary-400/30">
+                                    {language === 'ar' ? 'ابدأ الآن' : language === 'he' ? 'התחל' : 'Get Started'}
+                                </Link>
+                            </>
+                        )}
                     </div>
                 </div>
 
@@ -94,7 +121,12 @@ const Navbar = ({ site }: { site?: any }) => {
                         <Link href="#products" className="text-white font-medium text-lg" onClick={() => setIsOpen(false)}>{t('nav_products')}</Link>
                         <Link href="#about" className="text-white font-medium text-lg" onClick={() => setIsOpen(false)}>{t('nav_about')}</Link>
                         <Link href="#contact" className="text-white font-medium text-lg" onClick={() => setIsOpen(false)}>{t('nav_contact')}</Link>
-                        <Link href="/portal/login" className="text-gold-400 font-medium text-lg" onClick={() => setIsOpen(false)}>{t('nav_login')}</Link>
+
+                        {user ? (
+                            <Link href={user.role === 'admin' ? '/admin/dashboard' : '/portal/dashboard'} className="text-primary-400 font-medium text-lg" onClick={() => setIsOpen(false)}>{user.name.split(' ')[0]}'s Portal</Link>
+                        ) : (
+                            <Link href="/portal/login" className="text-gold-400 font-medium text-lg" onClick={() => setIsOpen(false)}>{t('nav_login')}</Link>
+                        )}
 
                         <div className="flex gap-2 pt-4 border-t border-white/10">
                             {languages.map((lang) => (
