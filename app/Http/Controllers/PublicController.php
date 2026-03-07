@@ -190,14 +190,58 @@ class PublicController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255',
-            'phone' => 'nullable|string|max:20',
-            'company' => 'nullable|string|max:255',
+            'phone' => 'nullable|string|max:50',
             'message' => 'required|string',
-            'locale' => 'required|string|in:ar,he,en',
         ]);
 
-        ContactMessage::create($validated);
+        \App\Models\ContactMessage::create($validated);
 
-        return response()->json(['message' => 'Message sent successfully.'], 201);
+        return response()->json(['success' => true]);
+    }
+
+    public function runMigrations()
+    {
+        \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
+        return 'Migrations executed successfully!';
+    }
+
+    public function runDemoSeeder()
+    {
+        \Illuminate\Support\Facades\Artisan::call('db:seed', ['--class' => 'DemoProjectSeeder', '--force' => true]);
+        return 'Demo Project & Investor Seeded Successfully! Login with: investor@test.com / password123';
+    }
+
+    public function seedSettings()
+    {
+        \Illuminate\Support\Facades\Artisan::call('db:seed', ['--class' => 'SettingSeeder', '--force' => true]);
+        return 'Settings Seeded Successfully!';
+    }
+
+    public function readLogs()
+    {
+        $logPath = storage_path('logs/laravel.log');
+        if (!file_exists($logPath)) {
+            return 'No logs found.';
+        }
+        $content = file_get_contents($logPath);
+        return response(substr($content, -10000))->header('Content-Type', 'text/plain');
+    }
+
+    public function fixAdminRole()
+    {
+        $user = \App\Models\User::where('email', 'admin@ifuture.sbs')->first();
+        if ($user) {
+            $user->role = 'admin';
+            $user->save();
+            return 'Admin role fixed! You can now login to the dashboard.';
+        }
+        return 'Admin user not found.';
+    }
+
+    public function clearCache()
+    {
+        \Illuminate\Support\Facades\Artisan::call('optimize:clear');
+        \Illuminate\Support\Facades\Artisan::call('optimize');
+        return 'Laravel Cache Cleared and Rebuilt Successfully!';
     }
 }
