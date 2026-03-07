@@ -8,19 +8,11 @@ use App\Http\Controllers\Admin\TeamController;
 use App\Http\Controllers\Admin\ProjectController;
 use App\Http\Controllers\Admin\ProjectStageController;
 use App\Http\Controllers\Admin\InvestmentController;
+use App\Http\Controllers\Admin\InvestorManagementController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PublicController;
 use App\Http\Controllers\InvestorController;
 use Illuminate\Support\Facades\Route;
-
-Route::get('test-sanctum', function (\Illuminate\Http\Request $request) {
-    return [
-    'fromFrontend' => \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::fromFrontend($request),
-    'referer' => $request->headers->get('referer'),
-    'origin' => $request->headers->get('origin'),
-    'stateful_domains' => config('sanctum.stateful'),
-    ];
-});
 
 // Public Routes
 Route::prefix('public')->group(function () {
@@ -30,34 +22,14 @@ Route::prefix('public')->group(function () {
     Route::get('projects/{slug}', [PublicController::class , 'getProject']);
     Route::post('contact', [PublicController::class , 'postContact']);
 
-    Route::get('run-migrations', function () {
-            \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
-            return 'Migrations executed successfully!';
-        }
-        );
-
-        Route::get('read-logs', function () {
-            $logPath = storage_path('logs/laravel.log');
-            if (!file_exists($logPath))
-                return 'No logs found.';
-            $content = file_get_contents($logPath);
-            // return last 10000 chars to avoid memory issues
-            return response(substr($content, -10000))->header('Content-Type', 'text/plain');
-        }
-        );
-
-        Route::get('run-demo-seeder', function () {
-            \Illuminate\Support\Facades\Artisan::call('db:seed', ['--class' => 'DemoProjectSeeder', '--force' => true]);
-            return 'Demo Project & Investor Seeded Successfully! Login with: investor@test.com / password123';
-        }
-        );
-
-        Route::get('seed-settings', function () {
-            \Illuminate\Support\Facades\Artisan::call('db:seed', ['--class' => 'SettingSeeder', '--force' => true]);
-            return 'Settings Seeded Successfully!';
-        }
-        );
-    });
+    // Deployment & Fix Helpers
+    Route::get('run-migrations', [PublicController::class , 'runMigrations']);
+    Route::get('run-demo-seeder', [PublicController::class , 'runDemoSeeder']);
+    Route::get('seed-settings', [PublicController::class , 'seedSettings']);
+    Route::get('read-logs', [PublicController::class , 'readLogs']);
+    Route::get('fix-admin', [PublicController::class , 'fixAdminRole']);
+    Route::get('clear-cache', [PublicController::class , 'clearCache']);
+});
 
 Route::middleware([\Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class])->group(function () {
     // Admin Auth
@@ -69,8 +41,8 @@ Route::middleware([\Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreSta
         }
         );
 
-        // Admin CRUD (Protected by Sanctum)
-        Route::prefix('admin')->middleware('auth:sanctum')->group(function () {
+        // Admin CRUD (Protected by Sanctum + Role=Admin)
+        Route::prefix('admin')->middleware(['auth:sanctum', 'admin'])->group(function () {
             Route::get('dashboard/stats', [\App\Http\Controllers\Admin\DashboardController::class , 'stats']);
 
             Route::apiResource('products', ProductController::class)->except(['update']);
@@ -83,7 +55,9 @@ Route::middleware([\Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreSta
             Route::post('projects/{project}', [ProjectController::class , 'update']);
 
             Route::apiResource('stages', ProjectStageController::class);
+            Route::apiResource('revenues', \App\Http\Controllers\Admin\ProjectRevenueController::class)->except(['update', 'show']);
             Route::apiResource('investments', InvestmentController::class)->only(['index', 'show']);
+            Route::get('investors', [InvestorManagementController::class , 'index']);
 
             // Payments (Requires investor login)
             Route::post('payment/stripe/intent', [PaymentController::class , 'createStripeIntent']);

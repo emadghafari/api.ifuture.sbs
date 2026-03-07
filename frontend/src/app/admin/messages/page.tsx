@@ -12,7 +12,12 @@ export default function AdminMessages() {
         adminFetch(`${API_URL}/api/admin/messages`)
             .then(res => res.json())
             .then(data => {
-                setMessages(data);
+                setMessages(Array.isArray(data) ? data : []);
+                setLoading(false);
+            })
+            .catch((e) => {
+                console.error("Failed to fetch messages", e);
+                setMessages([]);
                 setLoading(false);
             });
     }, []);

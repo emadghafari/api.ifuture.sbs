@@ -3,9 +3,11 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://api.ifuture.sbs/api'
 export const fetchHomeData = async (lang: string) => {
     const response = await fetch(`${API_URL}/public/home?lang=${lang}`, {
         cache: 'no-store',
+        headers: { 'Accept': 'application/json' }
     });
     if (!response.ok) throw new Error('Failed to fetch data');
-    return response.json();
+    const data = await response.json();
+    return data;
 };
 
 export const postContactMessage = async (data: any) => {
