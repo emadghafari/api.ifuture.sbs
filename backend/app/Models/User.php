@@ -24,6 +24,8 @@ class User extends Authenticatable
         'role',
         'phone',
         'passport_path',
+        'passport_number',
+        'passport_expiry',
     ];
 
     /**
