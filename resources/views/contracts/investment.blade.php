@@ -131,13 +131,16 @@
         .signatures-area {
             margin-top: 40px;
             width: 100%;
+            border-collapse: collapse;
         }
-        .sig-column {
-            width: 45%;
-            float: left;
+        .sig-cell {
+            width: 50%;
+            vertical-align: top;
+            padding-right: 20px;
         }
-        .sig-column.right {
-            float: right;
+        .sig-cell.right {
+            padding-right: 0;
+            padding-left: 20px;
         }
         .sig-title {
             font-family: 'Times New Roman', Times, serif;
@@ -182,7 +185,6 @@
             border-top: 1px solid #EAEAEA;
             padding-top: 10px;
         }
-        .clear { clear: both; }
     </style>
 </head>
 <body>
@@ -296,32 +298,32 @@
             The Parties agree that electronic signatures executed through the Company's digital platform shall be legally binding and equivalent to handwritten signatures. This Agreement shall be governed by the applicable laws and regulations relevant to the jurisdiction in which iFuture LLC operates.
         </div>
 
-        <div class="signatures-area" style="page-break-inside: avoid;">
-            <div class="sig-column">
-                <div class="sig-title">For the Company</div>
-                <div class="sig-line" style="padding-top: 15px;">
-                    <div class="stamp">Approved by iFuture LLC</div>
-                </div>
-                <div class="sig-name">
-                    Authorized Digital Stamp<br>
-                    <span style="font-weight: normal; font-size: 10pt; color: #888;">Date: {{ $DATE }}</span>
-                </div>
-            </div>
-
-            <div class="sig-column right">
-                <div class="sig-title">The Investor</div>
-                <div class="sig-line">
-                    @if($DIGITAL_SIGNATURE)
-                        <img src="{{ $DIGITAL_SIGNATURE }}" class="signature-img" alt="Investor Signature">
-                    @endif
-                </div>
-                <div class="sig-name">
-                    {{ $INVESTOR_NAME }}<br>
-                    <span style="font-weight: normal; font-size: 10pt; color: #888;">Date: {{ $DATE }}</span>
-                </div>
-            </div>
-            <div class="clear"></div>
-        </div>
+        <table class="signatures-area" style="page-break-inside: avoid;">
+            <tr>
+                <td class="sig-cell">
+                    <div class="sig-title">For the Company</div>
+                    <div class="sig-line" style="padding-top: 15px;">
+                        <div class="stamp">Approved by iFuture LLC</div>
+                    </div>
+                    <div class="sig-name">
+                        Authorized Digital Stamp<br>
+                        <span style="font-weight: normal; font-size: 10pt; color: #888;">Date: {{ $DATE }}</span>
+                    </div>
+                </td>
+                <td class="sig-cell right">
+                    <div class="sig-title">The Investor</div>
+                    <div class="sig-line">
+                        @if($DIGITAL_SIGNATURE)
+                            <img src="{{ $DIGITAL_SIGNATURE }}" class="signature-img" alt="Investor Signature">
+                        @endif
+                    </div>
+                    <div class="sig-name">
+                        {{ $INVESTOR_NAME }}<br>
+                        <span style="font-weight: normal; font-size: 10pt; color: #888;">Date: {{ $DATE }}</span>
+                    </div>
+                </td>
+            </tr>
+        </table>
 
     @if(isset($PASSPORT_IMAGE_PATH) && $PASSPORT_IMAGE_PATH)
     <div style="page-break-before: always;">
