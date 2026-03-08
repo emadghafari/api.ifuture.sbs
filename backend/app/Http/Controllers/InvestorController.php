@@ -34,4 +34,59 @@ class InvestorController extends Controller
 
         return response()->json($investments);
     }
+
+    /**
+     * Parse signature base64, render Dynamic PDF Contract with variables,
+     * and save to database.
+     */
+    public function signContract(Request $request, $id)
+    {
+        $request->validate([
+            'signature' => 'required|string', // Base64 image
+        ]);
+
+        $investorId = $request->user()->id;
+
+        $investment = Investment::where('id', $id)
+            ->where('user_id', $investorId)
+            ->with(['project', 'user'])
+            ->firstOrFail();
+
+        if ($investment->contract_pdf_path) {
+            return response()->json(['message' => 'Contract already signed.'], 400);
+        }
+
+        $signature = $request->input('signature');
+
+        $data = [
+            'DATE' => now()->format('Y-m-d'),
+            'COMPANY_NAME' => 'iFuture Hub',
+            'FOUNDER_NAME' => 'Emad Ghafari',
+            'INVESTOR_NAME' => $investment->user->name,
+            'INVESTOR_ID' => $investment->user->id,
+            'PROJECT_NAME' => $investment->project->title,
+            'PROJECT_DESCRIPTION' => $investment->project->description ?? 'Innovative Digital Platform',
+            'INVESTMENT_AMOUNT' => $investment->amount,
+            'CURRENCY' => 'USD',
+            'SHARES_PERCENTAGE' => $investment->shares,
+            'LOCK_PERIOD' => '12 months',
+            'DIGITAL_SIGNATURE' => $signature,
+        ];
+
+        // Ensure UTF-8 config is solid for Arabic text in DomPDF
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('contracts.investment', $data);
+
+        $filename = 'contracts/contract_' . $investment->id . '_' . time() . '.pdf';
+        \Illuminate\Support\Facades\Storage::disk('public')->put($filename, $pdf->output());
+
+        $investment->digital_signature = $signature;
+        $investment->contract_pdf_path = '/storage/' . $filename;
+        $investment->signed_at = now();
+        $investment->save();
+
+        return response()->json([
+            'success' => true,
+            'contract_url' => url('/storage/' . $filename)
+        ]);
+    }
 }
