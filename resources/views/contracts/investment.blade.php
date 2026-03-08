@@ -217,6 +217,9 @@
         <div class="party-details">
             Name: <strong>{{ $INVESTOR_NAME }}</strong><br>
             ID / Passport: <strong>{{ $INVESTOR_ID }}</strong><br>
+            @if(isset($PASSPORT_EXPIRY) && $PASSPORT_EXPIRY)
+            Passport Expiry: <strong>{{ date('d/m/Y', strtotime($PASSPORT_EXPIRY)) }}</strong><br>
+            @endif
             <em>Hereinafter referred to as "the Investor"</em>
         </div>
     </div>
@@ -313,6 +316,23 @@
             <div class="clear"></div>
         </div>
     </div>
+
+    @if(isset($PASSPORT_IMAGE) && $PASSPORT_IMAGE)
+    <pagebreak />
+    <div class="section-header">Appendix A: Investor Identification (KYC)</div>
+    <div class="clause" style="text-align: center; margin-top: 30px;">
+        <p style="margin-bottom: 20px;">The following identification document was provided by the Investor at the time of signing this Agreement.</p>
+        <div style="border: 2px solid #EAEAEA; padding: 10px; display: inline-block;">
+            <img src="data:{{ $PASSPORT_MIME }};base64,{{ $PASSPORT_IMAGE }}" style="max-width: 100%; max-height: 800px; display: block; margin: 0 auto;" alt="Investor Passport/ID">
+        </div>
+        <p style="margin-top: 20px; font-size: 10pt; color: #888;">
+            ID / Passport Number: {{ $INVESTOR_ID }}
+            @if(isset($PASSPORT_EXPIRY) && $PASSPORT_EXPIRY)
+            <br>Expiry Date: {{ date('d/m/Y', strtotime($PASSPORT_EXPIRY)) }}
+            @endif
+        </p>
+    </div>
+    @endif
 
     <htmlpagefooter name="page-footer">
         <div class="footer">

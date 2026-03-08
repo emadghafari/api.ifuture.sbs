@@ -45,6 +45,8 @@ class InvestorController extends Controller
             'signature' => 'required|string', // Base64 image
             'phone' => 'nullable|string|max:50',
             'passport_file' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:10240',
+            'passport_number' => 'nullable|string|max:100',
+            'passport_expiry' => 'nullable|date',
         ]);
 
         $investorId = $request->user()->id;
@@ -73,10 +75,24 @@ class InvestorController extends Controller
             $user->phone = $request->input('phone');
         }
 
+        if ($request->filled('passport_number')) {
+            $user->passport_number = $request->input('passport_number');
+        }
+
+        if ($request->filled('passport_expiry')) {
+            $user->passport_expiry = $request->input('passport_expiry');
+        }
+
         $user->save();
 
-        if (empty($user->phone) || empty($user->passport_path)) {
-            return response()->json(['message' => 'Missing KYC requirements. Please provide a phone number and upload your passport.'], 400);
+        if (empty($user->phone) || empty($user->passport_path) || empty($user->passport_number) || empty($user->passport_expiry)) {
+            return response()->json(['message' => 'Missing KYC requirements. Please provide your phone number, passport number, expiry date, and upload a copy of your passport.'], 400);
+        }
+
+        // Get the absolute path to the passport file for embedding in the PDF
+        $passportImagePath = null;
+        if ($user->passport_path && file_exists(storage_path('app/public/' . str_replace('/storage/', '', $user->passport_path)))) {
+            $passportImagePath = storage_path('app/public/' . str_replace('/storage/', '', $user->passport_path));
         }
 
         $signature = $request->input('signature');
@@ -86,7 +102,8 @@ class InvestorController extends Controller
             'COMPANY_NAME' => 'iFuture SBS',
             'FOUNDER_NAME' => 'Emad Ghafari',
             'INVESTOR_NAME' => $investment->user->name,
-            'INVESTOR_ID' => $investment->user->id,
+            'INVESTOR_ID' => $investment->user->passport_number ?? $investment->user->id,
+            'PASSPORT_EXPIRY' => $investment->user->passport_expiry,
             'PROJECT_NAME' => $investment->project->title,
             'PROJECT_DESCRIPTION' => $investment->project->description ?? 'Innovative Digital Platform',
             'INVESTMENT_AMOUNT' => $investment->amount,
@@ -94,6 +111,8 @@ class InvestorController extends Controller
             'SHARES_PERCENTAGE' => $investment->shares,
             'LOCK_PERIOD' => '12 months',
             'DIGITAL_SIGNATURE' => $signature,
+            'PASSPORT_IMAGE' => $passportImagePath ? base64_encode(file_get_contents($passportImagePath)) : null,
+            'PASSPORT_MIME' => $passportImagePath ? mime_content_type($passportImagePath) : null,
         ];
 
         // Ensure robust UTF-8 and Arabic shaping using mPDF
