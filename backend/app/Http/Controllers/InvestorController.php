@@ -74,10 +74,10 @@ class InvestorController extends Controller
         ];
 
         // Ensure robust UTF-8 and Arabic shaping using mPDF
-        $pdf = \Meneses\LaravelMpdf\Facades\LaravelMpdf::loadView('contracts.investment', $data, [], [
+        $pdf = \Mccarlosen\LaravelMpdf\Facades\LaravelMpdf::loadView('contracts.investment', $data, [], [
             'format' => 'A4',
             'orientation' => 'P',
-            'title' => 'Investment Agreement',
+            'title' => 'Equity Investment Agreement',
             'author' => 'iFuture Hub',
             'autoArabic' => true,
             'autoLangToFont' => true,
