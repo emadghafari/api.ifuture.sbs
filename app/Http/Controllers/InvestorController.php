@@ -86,7 +86,7 @@ class InvestorController extends Controller
 
         return response()->json([
             'success' => true,
-            'contract_url' => url('/storage/' . $filename)
+            'contract_url' => '/storage/' . $filename
         ]);
     }
 }
