@@ -188,6 +188,11 @@
 <body>
 
     <htmlpageheader name="page-header"></htmlpageheader>
+    <htmlpagefooter name="page-footer">
+        <div class="footer">
+            Confidential & Legally Binding Agreement | iFuture LLC | Investor Ref: {{ $INVESTOR_ID }} | Page {PAGENO} of {nbpg}
+        </div>
+    </htmlpagefooter>
 
     <div class="header-box">
         <h1 class="company-logo">iFuture LLC</h1>
@@ -325,11 +330,11 @@
     <div class="section-header">Appendix A: Investor Identification (KYC)</div>
     <div class="clause" style="text-align: center; margin-top: 30px;">
         <p style="margin-bottom: 20px;">The following identification document was provided by the Investor at the time of signing this Agreement.</p>
-        <div style="border: 2px solid #EAEAEA; padding: 10px; display: inline-block; width: 100%; text-align: center;">
+        <div style="border: 2px solid #EAEAEA; padding: 10px; display: block; margin: 0 auto; text-align: center;">
             @if(isset($PASSPORT_IS_PDF) && $PASSPORT_IS_PDF)
                 <p style="font-weight: bold; color: #555;">[PDF Document Attached to Investment Record]</p>
             @else
-                <img src="{{ $PASSPORT_IMAGE_PATH }}" style="max-width: 100%; max-height: 800px; display: inline-block; margin: 0 auto;" alt="Investor Passport/ID">
+                <img src="{{ $PASSPORT_IMAGE_PATH }}" style="max-width: 100%; max-height: 700px; display: inline-block; margin: 0 auto;" alt="Investor Passport/ID">
             @endif
         </div>
         <p style="margin-top: 20px; font-size: 10pt; color: #888;">
@@ -340,12 +345,6 @@
         </p>
     </div>
     @endif
-
-    <htmlpagefooter name="page-footer">
-        <div class="footer">
-            Confidential & Legally Binding Agreement | iFuture LLC | Investor Ref: {{ $INVESTOR_ID }} | Page {PAGENO} of {nbpg}
-        </div>
-    </htmlpagefooter>
 
 </body>
 </html>
