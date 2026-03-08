@@ -73,8 +73,16 @@ class InvestorController extends Controller
             'DIGITAL_SIGNATURE' => $signature,
         ];
 
-        // Ensure UTF-8 config is solid for Arabic text in DomPDF
-        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('contracts.investment', $data);
+        // Ensure robust UTF-8 and Arabic shaping using mPDF
+        $pdf = \Meneses\LaravelMpdf\Facades\LaravelMpdf::loadView('contracts.investment', $data, [], [
+            'format' => 'A4',
+            'orientation' => 'P',
+            'title' => 'Investment Agreement',
+            'author' => 'iFuture Hub',
+            'autoArabic' => true,
+            'autoLangToFont' => true,
+            'autoScriptToLang' => true,
+        ]);
 
         $filename = 'contract_' . $investment->id . '_' . time() . '.pdf';
         \Illuminate\Support\Facades\Storage::disk('public')->put('contracts/' . $filename, $pdf->output());
