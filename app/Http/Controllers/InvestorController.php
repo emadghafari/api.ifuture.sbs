@@ -76,17 +76,17 @@ class InvestorController extends Controller
         // Ensure UTF-8 config is solid for Arabic text in DomPDF
         $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('contracts.investment', $data);
 
-        $filename = 'contracts/contract_' . $investment->id . '_' . time() . '.pdf';
-        \Illuminate\Support\Facades\Storage::disk('public')->put($filename, $pdf->output());
+        $filename = 'contract_' . $investment->id . '_' . time() . '.pdf';
+        \Illuminate\Support\Facades\Storage::disk('public')->put('contracts/' . $filename, $pdf->output());
 
         $investment->digital_signature = $signature;
-        $investment->contract_pdf_path = '/storage/' . $filename;
+        $investment->contract_pdf_path = '/api/public/contracts/' . $filename;
         $investment->signed_at = now();
         $investment->save();
 
         return response()->json([
             'success' => true,
-            'contract_url' => '/storage/' . $filename
+            'contract_url' => $investment->contract_pdf_path
         ]);
     }
 }

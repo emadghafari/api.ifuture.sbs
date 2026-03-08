@@ -21,6 +21,7 @@ Route::prefix('public')->group(function () {
     Route::get('projects', [PublicController::class , 'getProjects']);
     Route::get('projects/{slug}', [PublicController::class , 'getProject']);
     Route::post('contact', [PublicController::class , 'postContact']);
+    Route::get('contracts/{filename}', [PublicController::class , 'getContract']);
 
     // Deployment & Fix Helpers
     Route::get('run-migrations', [PublicController::class , 'runMigrations']);
