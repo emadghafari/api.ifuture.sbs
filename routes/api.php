@@ -75,6 +75,7 @@ Route::middleware([\Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreSta
         // Investor Protected Routes
         Route::prefix('investor')->middleware('auth:sanctum')->group(function () {
             Route::get('investments', [InvestorController::class , 'getInvestments']);
+            Route::post('investments/{id}/sign', [InvestorController::class , 'signContract']);
         }
         );
     });
