@@ -43,6 +43,8 @@ class InvestorController extends Controller
     {
         $request->validate([
             'signature' => 'required|string', // Base64 image
+            'phone' => 'nullable|string|max:50',
+            'passport_file' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:10240',
         ]);
 
         $investorId = $request->user()->id;
@@ -56,11 +58,32 @@ class InvestorController extends Controller
             return response()->json(['message' => 'Contract already signed.'], 400);
         }
 
+        $user = $request->user();
+
+        // Verify KYC Requirements
+        // If user already has phone/passport from previous investments, we can allow missing from request.
+        // But the user prompt says: "ان لم يرفع جواز السفر الخاص به و كتابة رقم هاتفه لا يمكنه اتمام الصفقة"
+        // We will strictly check that the user ultimately has both before proceeding.
+        if ($request->hasFile('passport_file')) {
+            $path = $request->file('passport_file')->store('passports', 'public');
+            $user->passport_path = '/storage/' . $path;
+        }
+
+        if ($request->filled('phone')) {
+            $user->phone = $request->input('phone');
+        }
+
+        $user->save();
+
+        if (empty($user->phone) || empty($user->passport_path)) {
+            return response()->json(['message' => 'Missing KYC requirements. Please provide a phone number and upload your passport.'], 400);
+        }
+
         $signature = $request->input('signature');
 
         $data = [
             'DATE' => now()->format('Y-m-d'),
-            'COMPANY_NAME' => 'iFuture Hub',
+            'COMPANY_NAME' => 'iFuture SBS',
             'FOUNDER_NAME' => 'Emad Ghafari',
             'INVESTOR_NAME' => $investment->user->name,
             'INVESTOR_ID' => $investment->user->id,
@@ -78,7 +101,7 @@ class InvestorController extends Controller
             'format' => 'A4',
             'orientation' => 'P',
             'title' => 'Equity Investment Agreement',
-            'author' => 'iFuture Hub',
+            'author' => 'iFuture SBS',
             'autoArabic' => true,
             'autoLangToFont' => true,
             'autoScriptToLang' => true,

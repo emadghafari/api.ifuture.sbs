@@ -190,7 +190,7 @@
     <htmlpageheader name="page-header"></htmlpageheader>
 
     <div class="header-box">
-        <h1 class="company-logo">iFuture Hub</h1>
+        <h1 class="company-logo">iFuture SBS</h1>
         <p class="company-tagline">Premium Digital Investment Platform</p>
     </div>
 
@@ -229,7 +229,7 @@
     <div class="clause">
         The Investor agrees to invest in the following project developed and operated by the Company:<br><br>
         <strong>{{ $PROJECT_NAME }}</strong><br><br>
-        The project is a digital system / platform operating in the field of: <em>{{ $PROJECT_DESCRIPTION }}</em>, and is fully owned, managed, and operated by iFuture LLC.
+        The project is a digital system / platform operating in the field of: <em>{{ $PROJECT_DESCRIPTION }}</em>, and is fully owned, managed, and operated by iFuture SBS.
     </div>
 
     <div class="section-header">2. Investment Amount and Equity</div>
@@ -257,7 +257,7 @@
 
     <div class="section-header">4. Project Management</div>
     <div class="clause">
-        The management, development, operation, and strategic direction of the project shall remain under the full authority of iFuture LLC.<br><br>
+        The management, development, operation, and strategic direction of the project shall remain under the full authority of iFuture SBS.<br><br>
         This includes decisions related to:
         <div class="list-item">Technology development</div>
         <div class="list-item">Marketing and sales strategies</div>
@@ -283,14 +283,14 @@
 
         <div class="section-header">7. Electronic Signature & Compliance</div>
         <div class="clause">
-            The Parties agree that electronic signatures executed through the Company's digital platform shall be legally binding and equivalent to handwritten signatures. This Agreement shall be governed by the applicable laws and regulations relevant to the jurisdiction in which iFuture LLC operates.
+            The Parties agree that electronic signatures executed through the Company's digital platform shall be legally binding and equivalent to handwritten signatures. This Agreement shall be governed by the applicable laws and regulations relevant to the jurisdiction in which iFuture SBS operates.
         </div>
 
         <div class="signatures-area">
             <div class="sig-column">
                 <div class="sig-title">For the Company</div>
                 <div class="sig-line" style="padding-top: 15px;">
-                    <div class="stamp">Approved by iFuture LLC</div>
+                    <div class="stamp">Approved by iFuture SBS</div>
                 </div>
                 <div class="sig-name">
                     Authorized Digital Stamp<br>
@@ -316,7 +316,7 @@
 
     <htmlpagefooter name="page-footer">
         <div class="footer">
-            Confidential & Legally Binding Agreement | iFuture LLC | Investor Ref: {{ $INVESTOR_ID }} | Page {PAGENO} of {nbpg}
+            Confidential & Legally Binding Agreement | iFuture SBS | Investor Ref: {{ $INVESTOR_ID }} | Page {PAGENO} of {nbpg}
         </div>
     </htmlpagefooter>
 
