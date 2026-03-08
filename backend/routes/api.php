@@ -59,10 +59,6 @@ Route::middleware([\Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreSta
             Route::apiResource('investments', InvestmentController::class)->only(['index', 'show']);
             Route::get('investors', [InvestorManagementController::class , 'index']);
 
-            // Payments (Requires investor login)
-            Route::post('payment/stripe/intent', [PaymentController::class , 'createStripeIntent']);
-            Route::post('payment/capture', [PaymentController::class , 'captureInvestment']);
-
             Route::get('messages', [MessageController::class , 'index']);
             Route::get('settings', [SettingController::class , 'index']);
             Route::put('settings', [SettingController::class , 'update']);
@@ -76,6 +72,13 @@ Route::middleware([\Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreSta
         Route::prefix('investor')->middleware('auth:sanctum')->group(function () {
             Route::get('investments', [InvestorController::class , 'getInvestments']);
             Route::post('investments/{id}/sign', [InvestorController::class , 'signContract']);
+        }
+        );
+
+        // General Authenticated Routes (Payments)
+        Route::middleware('auth:sanctum')->group(function () {
+            Route::post('payment/stripe/intent', [PaymentController::class , 'createStripeIntent']);
+            Route::post('payment/capture', [PaymentController::class , 'captureInvestment']);
         }
         );
     });
