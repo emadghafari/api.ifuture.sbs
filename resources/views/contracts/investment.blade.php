@@ -281,9 +281,8 @@
         This distribution shall take place once per fiscal year, following the completion of comprehensive financial reporting, accounting review, and approval by the Company's management.
     </div>
 
-    <!-- Ensure remaining content and signature block don't break across pages ungracefully -->
-    <div style="page-break-inside: avoid;">
-        <div class="section-header">6. Protection, Risk, and Confidentiality</div>
+    <!-- Ensure signature block doesn't break across pages ungracefully -->
+    <div class="section-header">6. Protection, Risk, and Confidentiality</div>
         <div class="clause">
             The Parties acknowledge and agree to the following terms regarding security, risks, and confidentiality:
             <div class="list-item"><strong>Transparency & Reporting:</strong> The Company agrees to provide annual financial reports and transparent project performance summaries to ensure the Investor is fully aware of the business trajectory.</div>
@@ -297,7 +296,7 @@
             The Parties agree that electronic signatures executed through the Company's digital platform shall be legally binding and equivalent to handwritten signatures. This Agreement shall be governed by the applicable laws and regulations relevant to the jurisdiction in which iFuture LLC operates.
         </div>
 
-        <div class="signatures-area">
+        <div class="signatures-area" style="page-break-inside: avoid;">
             <div class="sig-column">
                 <div class="sig-title">For the Company</div>
                 <div class="sig-line" style="padding-top: 15px;">
@@ -323,7 +322,6 @@
             </div>
             <div class="clear"></div>
         </div>
-    </div>
 
     @if(isset($PASSPORT_IMAGE_PATH) && $PASSPORT_IMAGE_PATH)
     <pagebreak />
