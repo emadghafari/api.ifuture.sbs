@@ -1,167 +1,185 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en" dir="ltr">
 <head>
     <meta charset="UTF-8">
-    <title>Investment Agreement</title>
+    <title>Equity Investment Agreement</title>
     <style>
         @page {
             header: page-header;
             footer: page-footer;
-            margin-top: 50px;
-            margin-bottom: 50px;
-            margin-left: 40px;
-            margin-right: 40px;
+            margin-top: 60px;
+            margin-bottom: 60px;
+            margin-left: 50px;
+            margin-right: 50px;
         }
         body {
             font-family: Arial, Helvetica, sans-serif;
-            font-size: 13pt;
-            color: #1f2937;
-            line-height: 1.8;
+            font-size: 11pt;
+            color: #1E1E1E;
+            line-height: 1.6;
             margin: 0;
             padding: 0;
+            background-color: #FFFFFF;
         }
-        .header-logo {
+        .header-box {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 40px;
+            border-bottom: 2px solid #C8A951;
+            padding-bottom: 20px;
         }
-        .header-logo h1 {
-            color: #047857;
-            font-size: 26pt;
-            font-weight: 900;
+        .company-logo {
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 28pt;
+            font-weight: 700;
+            color: #0B0B0B;
             margin: 0;
             letter-spacing: -1px;
         }
-        .header-logo p {
-            color: #6b7280;
-            font-size: 10pt;
+        .company-tagline {
+            color: #C8A951;
+            font-size: 11pt;
             margin-top: 5px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
         }
         .contract-title {
             text-align: center;
-            background-color: #f3f4f6;
-            padding: 15px;
-            margin: 25px 0;
-            border-radius: 6px;
-            border-bottom: 3px solid #059669;
+            margin: 10px 0 40px 0;
         }
         .contract-title h2 {
+            font-family: 'Times New Roman', Times, serif;
             margin: 0;
-            font-size: 20pt;
-            color: #111827;
+            font-size: 24pt;
+            color: #0B0B0B;
+            font-weight: normal;
+            letter-spacing: 1px;
+            text-transform: uppercase;
         }
-        .date-badge {
+        .date-section {
             text-align: left;
             font-size: 11pt;
-            color: #4b5563;
-            margin-bottom: 25px;
-        }
-        .preamble {
-            text-align: justify;
+            color: #1E1E1E;
             margin-bottom: 30px;
-            font-size: 13pt;
-            background-color: #ffffff;
-            border-right: 4px solid #059669;
-            padding-right: 15px;
         }
-        .parties-box {
-            border: 2px solid #e5e7eb;
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 25px;
+        .party-card {
+            background-color: #FAFAFA;
+            border: 1px solid #EAEAEA;
+            border-left: 4px solid #C8A951;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 4px;
         }
-        .party-title {
+        .party-card-title {
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 14pt;
+            color: #0B0B0B;
+            margin-bottom: 10px;
             font-weight: bold;
-            color: #374151;
-            background-color: #f9fafb;
-            padding: 10px;
-            border-bottom: 1px solid #e5e7eb;
-            margin: -15px -15px 15px -15px;
-            border-radius: 8px 8px 0 0;
+            border-bottom: 1px solid #EAEAEA;
+            padding-bottom: 5px;
         }
-        table {
-            width: 100%;
-            border-collapse: collapse;
+        .party-details {
+            font-size: 11pt;
+            color: #1E1E1E;
         }
-        td {
-            padding: 6px 0;
-            vertical-align: top;
-        }
-        td.label {
-            width: 120px;
-            font-weight: bold;
-            color: #6b7280;
-            font-size: 12pt;
-        }
-        td.value {
-            font-weight: bold;
-            color: #111827;
+        .party-details strong {
+            color: #0B0B0B;
         }
         .section-header {
+            font-family: 'Times New Roman', Times, serif;
             font-size: 15pt;
-            font-weight: bold;
-            color: #111827;
-            border-bottom: 2px solid #10b981;
-            padding-bottom: 5px;
-            margin-top: 30px;
+            color: #0B0B0B;
+            margin-top: 35px;
             margin-bottom: 15px;
-            display: inline-block;
+            border-bottom: 1px solid #EAEAEA;
+            padding-bottom: 5px;
+            font-weight: bold;
         }
         .clause {
-            margin-bottom: 15px;
+            font-size: 11pt;
+            color: #1E1E1E;
+            margin-bottom: 20px;
             text-align: justify;
         }
-        .highlight {
-            background-color: #ecfdf5;
-            color: #065f46;
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-weight: bold;
+        .highlight-box {
+            background-color: #FDFBEE;
+            border: 1px solid #C8A951;
+            padding: 15px;
+            border-radius: 6px;
+            text-align: center;
+            margin: 20px 0;
+            font-size: 13pt;
+            color: #0B0B0B;
         }
-        .signatures {
-            margin-top: 40px;
+        .highlight-box span {
+            font-weight: bold;
+            font-size: 15pt;
+            color: #C8A951;
+        }
+        .list-item {
+            margin-bottom: 10px;
+            padding-left: 15px;
+            position: relative;
+        }
+        .list-item::before {
+            content: "•";
+            color: #C8A951;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+        .signatures-area {
+            margin-top: 60px;
             width: 100%;
         }
-        .sig-block {
+        .sig-column {
             width: 45%;
-            float: right;
-            border: 2px dashed #d1d5db;
-            padding: 15px;
-            text-align: center;
-            border-radius: 8px;
-            background-color: #ffffff;
-            min-height: 140px;
-        }
-        .sig-block.left {
             float: left;
         }
-        .sig-title {
-            font-weight: bold;
-            color: #374151;
-            margin-bottom: 10px;
-            border-bottom: 1px solid #e5e7eb;
-            padding-bottom: 10px;
+        .sig-column.right {
+            float: right;
         }
-        .stamp {
-            color: #10b981;
+        .sig-title {
+            font-family: 'Times New Roman', Times, serif;
             font-weight: bold;
+            color: #0B0B0B;
             font-size: 13pt;
-            margin-top: 20px;
-            border: 2px solid #10b981;
-            display: inline-block;
-            padding: 5px 15px;
-            border-radius: 4px;
-            transform: rotate(-3deg);
+            margin-bottom: 20px;
+            border-bottom: 1px solid #EAEAEA;
+            padding-bottom: 5px;
+        }
+        .sig-line {
+            width: 100%;
+            height: 80px;
+            margin-bottom: 5px;
         }
         .signature-img {
-            max-width: 180px;
+            max-width: 200px;
             max-height: 70px;
-            margin-top: 10px;
+        }
+        .sig-name {
+            font-weight: bold;
+            color: #0B0B0B;
+            font-size: 11pt;
+            padding-top: 5px;
+            border-top: 1px solid #EAEAEA;
+        }
+        .stamp {
+            color: #C8A951;
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 14pt;
+            font-style: italic;
+            border: 2px solid #C8A951;
+            display: inline-block;
+            padding: 10px 20px;
+            border-radius: 4px;
+            transform: rotate(-5deg);
         }
         .footer {
             text-align: center;
-            color: #9ca3af;
             font-size: 9pt;
-            border-top: 1px solid #e5e7eb;
+            color: #888888;
+            border-top: 1px solid #EAEAEA;
             padding-top: 10px;
         }
         .clear { clear: both; }
@@ -169,106 +187,136 @@
 </head>
 <body>
 
-    <htmlpageheader name="page-header">
-    </htmlpageheader>
+    <htmlpageheader name="page-header"></htmlpageheader>
 
-    <div class="header-logo">
-        <h1>iFuture Hub</h1>
-        <p>المنصة الرائدة للاستثمار في المشاريع الرقمية والتقنية</p>
+    <div class="header-box">
+        <h1 class="company-logo">iFuture Hub</h1>
+        <p class="company-tagline">Premium Digital Investment Platform</p>
     </div>
 
     <div class="contract-title">
-        <h2>وثيقة اتفاقية استثمار وشراكة إلكترونية</h2>
+        <h2>Equity Investment Agreement</h2>
     </div>
 
-    <div class="date-badge">
-        <strong>تاريخ ومُعرف الإبرام:</strong> {{ $DATE }}
+    <div class="date-section">
+        This Investment Agreement ("Agreement") is made on <strong>{{ $DATE }}</strong>, by and between:
     </div>
 
-    <div class="preamble">
-        بعون الله وتوفيقه، تم إبرام هذه الاتفاقية الاستثمارية المُلزمة بين الطرفين المذكورين أدناه، وفقاً للأنظمة واللوائح المنظمة للشراكات والمحافظ الرقمية:
+    <div class="party-card">
+        <div class="party-card-title">Company:</div>
+        <div class="party-details">
+            <strong>{{ $COMPANY_NAME }}</strong><br>
+            A technology company specializing in digital platforms, software solutions, and SaaS systems.<br>
+            Represented by: <strong>{{ $FOUNDER_NAME }}</strong><br>
+            <em>Hereinafter referred to as "the Company"</em>
+        </div>
     </div>
 
-    <div class="parties-box">
-        <div class="party-title">الطرف الأول (مدير المشروع والمنصة)</div>
-        <table>
-            <tr>
-                <td class="label">الكيان / المنصة:</td>
-                <td class="value">{{ $COMPANY_NAME }}</td>
-            </tr>
-            <tr>
-                <td class="label">الممثل القانوني:</td>
-                <td class="value">{{ $FOUNDER_NAME }}</td>
-            </tr>
-        </table>
+    <div class="party-card">
+        <div class="party-card-title">Investor:</div>
+        <div class="party-details">
+            Name: <strong>{{ $INVESTOR_NAME }}</strong><br>
+            ID / Passport: <strong>{{ $INVESTOR_ID }}</strong><br>
+            <em>Hereinafter referred to as "the Investor"</em>
+        </div>
     </div>
 
-    <div class="parties-box">
-        <div class="party-title">الطرف الثاني (المستثمر / الشريك المالي)</div>
-        <table>
-            <tr>
-                <td class="label">الاسم الكامل:</td>
-                <td class="value">{{ $INVESTOR_NAME }}</td>
-            </tr>
-            <tr>
-                <td class="label">رقم المستثمر:</td>
-                <td class="value"><span dir="ltr">{{ $INVESTOR_ID }}</span></td>
-            </tr>
-        </table>
+    <div class="clause" style="text-align: center; font-style: italic; margin-top: 30px;">
+        The Company and the Investor shall collectively be referred to as "the Parties".
     </div>
 
-    <div class="section-header">البند الأول: موضوع الشراكة</div>
+    <div class="section-header">1. Purpose of the Agreement</div>
     <div class="clause">
-        يقر الطرف الثاني (المستثمر) الموافقة التامة على الاستثمار ودخول الشراكة في مشروع <strong>"{{ $PROJECT_NAME }}"</strong>، وهو كيان يهدف إلى:
+        The Investor agrees to invest in the following project developed and operated by the Company:<br><br>
+        <strong>{{ $PROJECT_NAME }}</strong><br><br>
+        The project is a digital system / platform operating in the field of: <em>{{ $PROJECT_DESCRIPTION }}</em>, and is fully owned, managed, and operated by iFuture LLC.
+    </div>
+
+    <div class="section-header">2. Investment Amount and Equity</div>
+    <div class="clause">
+        The Investor agrees to invest the total amount of:
+        <div class="highlight-box">
+            <span>{{ number_format($INVESTMENT_AMOUNT, 2) }} {{ $CURRENCY }}</span>
+        </div>
+        in exchange for an equity ownership of:
+        <div class="highlight-box">
+            <span>{{ $SHARES_PERCENTAGE }} %</span>
+        </div>
+        in the project specified above.
+    </div>
+
+    <div class="section-header">3. Ownership Rights</div>
+    <div class="clause">
+        The Investor's equity ownership grants the following rights:
+        <div class="list-item">Participation in project profits proportional to the ownership percentage.</div>
+        <div class="list-item">Access to periodic project performance and financial reports.</div>
+        <div class="list-item">The right to transfer or sell shares subject to Company approval.</div>
         <br>
-        <div style="color: #4b5563; font-style: italic; margin-top: 10px;">{{ $PROJECT_DESCRIPTION }}</div>
-        <br>
-        ويكون هذا المشروع تحت الإدارة والتشغيل التقني والمالي الحصري للطرف الأول.
+        The Investor acknowledges that ownership does not grant operational control of the project.
     </div>
 
-    <div class="section-header">البند الثاني: الحصة المالية والنسبة المُستحقة</div>
+    <div class="section-header">4. Project Management</div>
     <div class="clause">
-        قام الطرف الثاني بنجاح بتمويل حصته المقدرة بقيمة <span class="highlight">{{ number_format($INVESTMENT_AMOUNT, 2) }} {{ $CURRENCY }}</span> في ميزانية المشروع. 
-        بموجب هذا التمويل، يستحق الطرف الثاني ملكية نسبة تبلغ <span class="highlight">{{ $SHARES_PERCENTAGE }} %</span> من إجمالي أسهم وعوائد المشروع طيلة فترة الشراكة المعتمدة.
+        The management, development, operation, and strategic direction of the project shall remain under the full authority of iFuture LLC.<br><br>
+        This includes decisions related to:
+        <div class="list-item">Technology development</div>
+        <div class="list-item">Marketing and sales strategies</div>
+        <div class="list-item">Partnerships and integrations</div>
+        <div class="list-item">Operational and business decisions</div>
     </div>
 
-    <div class="section-header">البند الثالث: الصلاحيات وتوزيع العوائد</div>
+    <div class="section-header">5. Annual Profit Distribution</div>
     <div class="clause">
-        <ul style="margin-top: 5px;">
-            <li style="margin-bottom: 8px;"><strong>العوائد المالية:</strong> يتم توزيع وتخصيص الأرباح الناتجة عن المشروع دورياً للمستثمر بما يعادل نسبة ملكيته، وتُضاف كرصيد قابل للسحب في محفظته بالمنصة.</li>
-            <li style="margin-bottom: 8px;"><strong>فترة الإقفال (Lock-in):</strong> لا يحق للمستثمر المطالبة بتصفية أو استرداد أصل رأس المال المُستثمر قبل انقضاء فترة تعادل <strong>{{ $LOCK_PERIOD }}</strong> من تاريخ توقيع هذا العقد.</li>
-            <li style="margin-bottom: 8px;"><strong>الإدارة الفنية:</strong> يحتفظ الطرف الأول بحق الإدارة، التطوير، تعديل الخطط الاستراتيجية، وإقرار الميزانيات بما يضمن تحقيق مصالح جميع الشركاء.</li>
-        </ul>
+        The Company agrees that net profits generated by the project will be distributed annually to investors.<br><br>
+        Profit distribution shall be calculated according to the Investor's ownership percentage and shall take place once per fiscal year, following the completion of financial reporting and accounting review.
     </div>
 
-    <div class="section-header">البند الرابع: التوقيع والإلزام القانوني</div>
-    <div class="clause">
-        تمت قراءة هذا العقد والموافقة عليه إلكترونياً من قبل الطرفين. ويُعد هذا العقد الممهور بالتوقيع الإلكتروني مُعتمداً، ونسخة منه محفوظة آلياً ومشفّرة بقاعدة بيانات المنصة، وتُعتد بها كوثيقة قانونية تامة الإثبات.
-    </div>
-
-    <div class="signatures">
-        <div class="sig-block">
-            <div class="sig-title">الطرف الأول (اعتماد المنصة)</div>
-            <div class="stamp">✅ مُعتمَد رسمياً</div>
-            <p style="margin-top: 15px; font-size: 10pt; color: #6b7280; font-weight: bold;">إدارة منصة iFuture Hub</p>
+    <!-- Ensure remaining content and signature block don't break across pages ungracefully -->
+    <div style="page-break-inside: avoid;">
+        <div class="section-header">6. Protection, Risk, and Confidentiality</div>
+        <div class="clause">
+            <div class="list-item"><strong>Transparency:</strong> The Company agrees to provide annual financial reports and project performance summaries.</div>
+            <div class="list-item"><strong>Investor Protection:</strong> The Investor's ownership percentage will be respected and recorded in the Company's internal equity registry.</div>
+            <div class="list-item"><strong>Risk Acknowledgment:</strong> The Investor understands that investments in technology projects may involve financial risk. The Company commits to operating professionally to maximize growth.</div>
+            <div class="list-item"><strong>Confidentiality:</strong> The Investor agrees not to disclose any confidential business, technical, or financial information related to the Company or the project.</div>
         </div>
 
-        <div class="sig-block left">
-            <div class="sig-title">الطرف الثاني (إمضاء المستثمر)</div>
-            @if($DIGITAL_SIGNATURE)
-                <img src="{{ $DIGITAL_SIGNATURE }}" class="signature-img" alt="توقيع المستثمر">
-                <p style="margin-top: 5px; font-size: 9pt; color: #10b981; font-weight: bold;">تمت المطابقة والمُصادقة</p>
-            @else
-                <div style="height: 80px; line-height: 80px; color: #9ca3af; font-size: 10pt;">(بدون توقيع)</div>
-            @endif
-            <p style="margin-top: 5px; font-size: 11pt; font-weight: bold; color: #111827;">{{ $INVESTOR_NAME }}</p>
+        <div class="section-header">7. Electronic Signature & Compliance</div>
+        <div class="clause">
+            The Parties agree that electronic signatures executed through the Company's digital platform shall be legally binding and equivalent to handwritten signatures. This Agreement shall be governed by the applicable laws and regulations relevant to the jurisdiction in which iFuture LLC operates.
         </div>
-        <div class="clear"></div>
+
+        <div class="signatures-area">
+            <div class="sig-column">
+                <div class="sig-title">For the Company</div>
+                <div class="sig-line" style="padding-top: 15px;">
+                    <div class="stamp">Approved by iFuture LLC</div>
+                </div>
+                <div class="sig-name">
+                    Authorized Digital Stamp<br>
+                    <span style="font-weight: normal; font-size: 10pt; color: #888;">Date: {{ $DATE }}</span>
+                </div>
+            </div>
+
+            <div class="sig-column right">
+                <div class="sig-title">The Investor</div>
+                <div class="sig-line">
+                    @if($DIGITAL_SIGNATURE)
+                        <img src="{{ $DIGITAL_SIGNATURE }}" class="signature-img" alt="Investor Signature">
+                    @endif
+                </div>
+                <div class="sig-name">
+                    {{ $INVESTOR_NAME }}<br>
+                    <span style="font-weight: normal; font-size: 10pt; color: #888;">Date: {{ $DATE }}</span>
+                </div>
+            </div>
+            <div class="clear"></div>
+        </div>
     </div>
 
     <htmlpagefooter name="page-footer">
         <div class="footer">
-            وثيقة إلكترونية سرية - iFuture Hub - وثيقة تامة الإثبات - المعرف: {{ $INVESTOR_ID }} - الصفحة {PAGENO} من {nbpg}
+            Confidential & Legally Binding Agreement | iFuture LLC | Investor Ref: {{ $INVESTOR_ID }} | Page {PAGENO} of {nbpg}
         </div>
     </htmlpagefooter>
 
