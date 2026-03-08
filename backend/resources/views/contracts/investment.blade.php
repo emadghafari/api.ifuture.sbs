@@ -296,7 +296,7 @@
             The Parties agree that electronic signatures executed through the Company's digital platform shall be legally binding and equivalent to handwritten signatures. This Agreement shall be governed by the applicable laws and regulations relevant to the jurisdiction in which iFuture LLC operates.
         </div>
 
-        <div class="signatures-area">
+        <div class="signatures-area" style="page-break-inside: avoid;">
             <div class="sig-column">
                 <div class="sig-title">For the Company</div>
                 <div class="sig-line" style="padding-top: 15px;">
