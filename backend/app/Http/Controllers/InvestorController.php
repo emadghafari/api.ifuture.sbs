@@ -101,9 +101,9 @@ class InvestorController extends Controller
             'DATE' => now()->format('Y-m-d'),
             'COMPANY_NAME' => 'iFuture SBS',
             'FOUNDER_NAME' => 'Emad Ghafari',
-            'INVESTOR_NAME' => $investment->user->name,
-            'INVESTOR_ID' => $investment->user->passport_number ?? $investment->user->id,
-            'PASSPORT_EXPIRY' => $investment->user->passport_expiry,
+            'INVESTOR_NAME' => $user->name,
+            'INVESTOR_ID' => $user->passport_number ?? $user->id,
+            'PASSPORT_EXPIRY' => $user->passport_expiry,
             'PROJECT_NAME' => $investment->project->title,
             'PROJECT_DESCRIPTION' => $investment->project->description ?? 'Innovative Digital Platform',
             'INVESTMENT_AMOUNT' => $investment->amount,
@@ -111,23 +111,31 @@ class InvestorController extends Controller
             'SHARES_PERCENTAGE' => $investment->shares,
             'LOCK_PERIOD' => '12 months',
             'DIGITAL_SIGNATURE' => $signature,
-            'PASSPORT_IMAGE' => $passportImagePath ? base64_encode(file_get_contents($passportImagePath)) : null,
-            'PASSPORT_MIME' => $passportImagePath ? mime_content_type($passportImagePath) : null,
+            'PASSPORT_IMAGE_PATH' => $passportImagePath,
+            'PASSPORT_IS_PDF' => $passportImagePath ? (strtolower(pathinfo($passportImagePath, PATHINFO_EXTENSION)) === 'pdf') : false,
         ];
 
         // Ensure robust UTF-8 and Arabic shaping using mPDF
-        $pdf = \Mccarlosen\LaravelMpdf\Facades\LaravelMpdf::loadView('contracts.investment', $data, [], [
-            'format' => 'A4',
-            'orientation' => 'P',
-            'title' => 'Equity Investment Agreement',
-            'author' => 'iFuture SBS',
-            'autoArabic' => true,
-            'autoLangToFont' => true,
-            'autoScriptToLang' => true,
-        ]);
+        try {
+            $pdf = \Mccarlosen\LaravelMpdf\Facades\LaravelMpdf::loadView('contracts.investment', $data, [], [
+                'format' => 'A4',
+                'orientation' => 'P',
+                'title' => 'Equity Investment Agreement',
+                'author' => 'iFuture SBS',
+                'autoArabic' => true,
+                'autoLangToFont' => true,
+                'autoScriptToLang' => true,
+            ]);
 
-        $filename = 'contract_' . $investment->id . '_' . time() . '.pdf';
-        \Illuminate\Support\Facades\Storage::disk('public')->put('contracts/' . $filename, $pdf->output());
+            $filename = 'contract_' . $investment->id . '_' . time() . '.pdf';
+            \Illuminate\Support\Facades\Storage::disk('public')->put('contracts/' . $filename, $pdf->output());
+        }
+        catch (\Throwable $e) {
+            // Catch any Fatal errors or exceptions (like memory limit or file permissions)
+            return response()->json([
+                'message' => 'PDF Generation Error: ' . $e->getMessage() . ' in ' . basename($e->getFile()) . ':' . $e->getLine()
+            ], 500);
+        }
 
         $investment->digital_signature = $signature;
         $investment->contract_pdf_path = '/api/public/contracts/' . $filename;
