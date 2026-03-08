@@ -59,6 +59,7 @@ Route::middleware([\Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreSta
             Route::apiResource('revenues', \App\Http\Controllers\Admin\ProjectRevenueController::class)->except(['update', 'show']);
             Route::apiResource('investments', InvestmentController::class)->only(['index', 'show']);
             Route::get('investors', [InvestorManagementController::class , 'index']);
+            Route::delete('investors/{id}', [InvestorManagementController::class , 'destroy']);
 
             Route::get('messages', [MessageController::class , 'index']);
             Route::get('settings', [SettingController::class , 'index']);
