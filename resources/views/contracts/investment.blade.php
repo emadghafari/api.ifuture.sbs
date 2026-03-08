@@ -7,25 +7,25 @@
         @page {
             header: page-header;
             footer: page-footer;
-            margin-top: 60px;
-            margin-bottom: 60px;
-            margin-left: 50px;
-            margin-right: 50px;
+            margin-top: 55px;
+            margin-bottom: 50px;
+            margin-left: 45px;
+            margin-right: 45px;
         }
         body {
             font-family: Arial, Helvetica, sans-serif;
-            font-size: 11pt;
+            font-size: 10.5pt;
             color: #1E1E1E;
-            line-height: 1.6;
+            line-height: 1.5;
             margin: 0;
             padding: 0;
             background-color: #FFFFFF;
         }
         .header-box {
             text-align: center;
-            margin-bottom: 40px;
+            margin-bottom: 30px;
             border-bottom: 2px solid #C8A951;
-            padding-bottom: 20px;
+            padding-bottom: 15px;
         }
         .company-logo {
             font-family: 'Times New Roman', Times, serif;
@@ -57,9 +57,9 @@
         }
         .date-section {
             text-align: left;
-            font-size: 11pt;
+            font-size: 10.5pt;
             color: #1E1E1E;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
         }
         .party-card {
             background-color: #FAFAFA;
@@ -79,7 +79,7 @@
             padding-bottom: 5px;
         }
         .party-details {
-            font-size: 11pt;
+            font-size: 10.5pt;
             color: #1E1E1E;
         }
         .party-details strong {
@@ -87,18 +87,18 @@
         }
         .section-header {
             font-family: 'Times New Roman', Times, serif;
-            font-size: 15pt;
+            font-size: 14pt;
             color: #0B0B0B;
-            margin-top: 35px;
-            margin-bottom: 15px;
+            margin-top: 30px;
+            margin-bottom: 10px;
             border-bottom: 1px solid #EAEAEA;
             padding-bottom: 5px;
             font-weight: bold;
         }
         .clause {
-            font-size: 11pt;
+            font-size: 10.5pt;
             color: #1E1E1E;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             text-align: justify;
         }
         .highlight-box {
@@ -117,7 +117,7 @@
             color: #C8A951;
         }
         .list-item {
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             padding-left: 15px;
             position: relative;
         }
@@ -129,7 +129,7 @@
             top: 0;
         }
         .signatures-area {
-            margin-top: 60px;
+            margin-top: 40px;
             width: 100%;
         }
         .sig-column {
