@@ -190,7 +190,7 @@
     <htmlpageheader name="page-header"></htmlpageheader>
 
     <div class="header-box">
-        <h1 class="company-logo">iFuture SBS</h1>
+        <h1 class="company-logo">iFuture LLC</h1>
         <p class="company-tagline">Premium Digital Investment Platform</p>
     </div>
 
@@ -216,6 +216,7 @@
         <div class="party-card-title">Investor:</div>
         <div class="party-details">
             Name: <strong>{{ $INVESTOR_NAME }}</strong><br>
+            Phone: <strong dir="ltr">{{ $INVESTOR_PHONE ?? 'N/A' }}</strong><br>
             ID / Passport: <strong>{{ $INVESTOR_ID }}</strong><br>
             @if(isset($PASSPORT_EXPIRY) && $PASSPORT_EXPIRY)
             Passport Expiry: <strong>{{ date('d/m/Y', strtotime($PASSPORT_EXPIRY)) }}</strong><br>
@@ -232,7 +233,7 @@
     <div class="clause">
         The Investor agrees to invest in the following project developed and operated by the Company:<br><br>
         <strong>{{ $PROJECT_NAME }}</strong><br><br>
-        The project is a digital system / platform operating in the field of: <em>{{ $PROJECT_DESCRIPTION }}</em>, and is fully owned, managed, and operated by iFuture SBS.
+        The project is a digital system / platform operating in the field of: <em>{{ $PROJECT_DESCRIPTION }}</em>, and is fully owned, managed, and operated by iFuture LLC.
     </div>
 
     <div class="section-header">2. Investment Amount and Equity</div>
@@ -260,7 +261,7 @@
 
     <div class="section-header">4. Project Management</div>
     <div class="clause">
-        The management, development, operation, and strategic direction of the project shall remain under the full authority of iFuture SBS.<br><br>
+        The management, development, operation, and strategic direction of the project shall remain under the full authority of iFuture LLC.<br><br>
         This includes decisions related to:
         <div class="list-item">Technology development</div>
         <div class="list-item">Marketing and sales strategies</div>
@@ -286,14 +287,14 @@
 
         <div class="section-header">7. Electronic Signature & Compliance</div>
         <div class="clause">
-            The Parties agree that electronic signatures executed through the Company's digital platform shall be legally binding and equivalent to handwritten signatures. This Agreement shall be governed by the applicable laws and regulations relevant to the jurisdiction in which iFuture SBS operates.
+            The Parties agree that electronic signatures executed through the Company's digital platform shall be legally binding and equivalent to handwritten signatures. This Agreement shall be governed by the applicable laws and regulations relevant to the jurisdiction in which iFuture LLC operates.
         </div>
 
         <div class="signatures-area">
             <div class="sig-column">
                 <div class="sig-title">For the Company</div>
                 <div class="sig-line" style="padding-top: 15px;">
-                    <div class="stamp">Approved by iFuture SBS</div>
+                    <div class="stamp">Approved by iFuture LLC</div>
                 </div>
                 <div class="sig-name">
                     Authorized Digital Stamp<br>
@@ -317,13 +318,17 @@
         </div>
     </div>
 
-    @if(isset($PASSPORT_IMAGE) && $PASSPORT_IMAGE)
+    @if(isset($PASSPORT_IMAGE_PATH) && $PASSPORT_IMAGE_PATH)
     <pagebreak />
     <div class="section-header">Appendix A: Investor Identification (KYC)</div>
     <div class="clause" style="text-align: center; margin-top: 30px;">
         <p style="margin-bottom: 20px;">The following identification document was provided by the Investor at the time of signing this Agreement.</p>
-        <div style="border: 2px solid #EAEAEA; padding: 10px; display: inline-block;">
-            <img src="data:{{ $PASSPORT_MIME }};base64,{{ $PASSPORT_IMAGE }}" style="max-width: 100%; max-height: 800px; display: block; margin: 0 auto;" alt="Investor Passport/ID">
+        <div style="border: 2px solid #EAEAEA; padding: 10px; display: inline-block; width: 100%; text-align: center;">
+            @if(isset($PASSPORT_IS_PDF) && $PASSPORT_IS_PDF)
+                <p style="font-weight: bold; color: #555;">[PDF Document Attached to Investment Record]</p>
+            @else
+                <img src="{{ $PASSPORT_IMAGE_PATH }}" style="max-width: 100%; max-height: 800px; display: inline-block; margin: 0 auto;" alt="Investor Passport/ID">
+            @endif
         </div>
         <p style="margin-top: 20px; font-size: 10pt; color: #888;">
             ID / Passport Number: {{ $INVESTOR_ID }}
@@ -336,7 +341,7 @@
 
     <htmlpagefooter name="page-footer">
         <div class="footer">
-            Confidential & Legally Binding Agreement | iFuture SBS | Investor Ref: {{ $INVESTOR_ID }} | Page {PAGENO} of {nbpg}
+            Confidential & Legally Binding Agreement | iFuture LLC | Investor Ref: {{ $INVESTOR_ID }} | Page {PAGENO} of {nbpg}
         </div>
     </htmlpagefooter>
 

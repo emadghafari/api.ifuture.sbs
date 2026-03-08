@@ -102,6 +102,7 @@ class InvestorController extends Controller
             'COMPANY_NAME' => 'iFuture SBS',
             'FOUNDER_NAME' => 'Emad Ghafari',
             'INVESTOR_NAME' => $user->name,
+            'INVESTOR_PHONE' => $user->phone,
             'INVESTOR_ID' => $user->passport_number ?? $user->id,
             'PASSPORT_EXPIRY' => $user->passport_expiry,
             'PROJECT_NAME' => $investment->project->title,
