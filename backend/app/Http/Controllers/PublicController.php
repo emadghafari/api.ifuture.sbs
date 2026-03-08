@@ -244,4 +244,15 @@ class PublicController extends Controller
         \Illuminate\Support\Facades\Artisan::call('optimize');
         return 'Laravel Cache Cleared and Rebuilt Successfully!';
     }
+
+    public function getContract($filename)
+    {
+        // Serve the contract PDF by directly accessing the storage path
+        $path = storage_path('app/public/contracts/' . $filename);
+        if (!file_exists($path)) {
+            abort(404, 'Contract not found on server disk.');
+        }
+        $mime = \Illuminate\Support\Facades\File::mimeType($path);
+        return response()->file($path, ['Content-Type' => $mime]);
+    }
 }
