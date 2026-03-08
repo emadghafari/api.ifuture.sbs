@@ -296,7 +296,7 @@
             The Parties agree that electronic signatures executed through the Company's digital platform shall be legally binding and equivalent to handwritten signatures. This Agreement shall be governed by the applicable laws and regulations relevant to the jurisdiction in which iFuture LLC operates.
         </div>
 
-        <div class="signatures-area" style="page-break-inside: avoid;">
+        <div class="signatures-area">
             <div class="sig-column">
                 <div class="sig-title">For the Company</div>
                 <div class="sig-line" style="padding-top: 15px;">
@@ -324,8 +324,8 @@
         </div>
 
     @if(isset($PASSPORT_IMAGE_PATH) && $PASSPORT_IMAGE_PATH)
-    <pagebreak />
-    <div class="section-header">Appendix A: Investor Identification (KYC)</div>
+    <div style="page-break-before: always;">
+        <div class="section-header">Appendix A: Investor Identification (KYC)</div>
     <div class="clause" style="text-align: center; margin-top: 30px;">
         <p style="margin-bottom: 20px;">The following identification document was provided by the Investor at the time of signing this Agreement.</p>
         <div style="border: 2px solid #EAEAEA; padding: 10px; display: block; margin: 0 auto; text-align: center;">
@@ -341,6 +341,7 @@
             <br>Expiry Date: {{ date('d/m/Y', strtotime($PASSPORT_EXPIRY)) }}
             @endif
         </p>
+    </div>
     </div>
     @endif
 
