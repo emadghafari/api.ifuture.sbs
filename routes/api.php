@@ -31,6 +31,7 @@ Route::prefix('public')->group(function () {
     Route::get('fix-admin', [PublicController::class , 'fixAdminRole']);
     Route::get('clear-cache', [PublicController::class , 'clearCache']);
     Route::get('debug-routes', [PublicController::class , 'debugRoutes']);
+    Route::get('debug-env', [PublicController::class , 'debugEnv']);
 });
 
 // Google OAuth Routes

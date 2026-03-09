@@ -40,7 +40,16 @@ class PublicController extends Controller
             'og_image' => $getSetting('seo_og_image', null),
             'favicon' => $getSetting('seo_favicon', null),
         ]);
+        public function debugEnv()
+    {
+        return response()->json([
+            'session_domain' => config('session.domain'),
+            'sanctum_domains' => config('sanctum.stateful'),
+            'cors_credentials' => config('cors.supports_credentials'),
+            'session_driver' => config('session.driver'),
+        ]);
     }
+}
 
     public function getHome(Request $request)
     {
@@ -161,7 +170,16 @@ class PublicController extends Controller
             'team' => $team,
             'featured_projects' => $featured_projects,
         ]);
+        public function debugEnv()
+    {
+        return response()->json([
+            'session_domain' => config('session.domain'),
+            'sanctum_domains' => config('sanctum.stateful'),
+            'cors_credentials' => config('cors.supports_credentials'),
+            'session_driver' => config('session.driver'),
+        ]);
     }
+}
 
     public function getProjects(Request $request)
     {
@@ -172,7 +190,16 @@ class PublicController extends Controller
             ->get();
 
         return response()->json($projects);
+        public function debugEnv()
+    {
+        return response()->json([
+            'session_domain' => config('session.domain'),
+            'sanctum_domains' => config('sanctum.stateful'),
+            'cors_credentials' => config('cors.supports_credentials'),
+            'session_driver' => config('session.driver'),
+        ]);
     }
+}
 
     public function getProject($slug)
     {
@@ -183,7 +210,16 @@ class PublicController extends Controller
             ->firstOrFail();
 
         return response()->json($project);
+        public function debugEnv()
+    {
+        return response()->json([
+            'session_domain' => config('session.domain'),
+            'sanctum_domains' => config('sanctum.stateful'),
+            'cors_credentials' => config('cors.supports_credentials'),
+            'session_driver' => config('session.driver'),
+        ]);
     }
+}
 
     public function postContact(Request $request)
     {
@@ -197,35 +233,89 @@ class PublicController extends Controller
         \App\Models\ContactMessage::create($validated);
 
         return response()->json(['success' => true]);
+        public function debugEnv()
+    {
+        return response()->json([
+            'session_domain' => config('session.domain'),
+            'sanctum_domains' => config('sanctum.stateful'),
+            'cors_credentials' => config('cors.supports_credentials'),
+            'session_driver' => config('session.driver'),
+        ]);
     }
+}
 
     public function runMigrations()
     {
         \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
         return 'Migrations executed successfully!';
+        public function debugEnv()
+    {
+        return response()->json([
+            'session_domain' => config('session.domain'),
+            'sanctum_domains' => config('sanctum.stateful'),
+            'cors_credentials' => config('cors.supports_credentials'),
+            'session_driver' => config('session.driver'),
+        ]);
     }
+}
 
     public function runDemoSeeder()
     {
         \Illuminate\Support\Facades\Artisan::call('db:seed', ['--class' => 'DemoProjectSeeder', '--force' => true]);
         return 'Demo Project & Investor Seeded Successfully! Login with: investor@test.com / password123';
+        public function debugEnv()
+    {
+        return response()->json([
+            'session_domain' => config('session.domain'),
+            'sanctum_domains' => config('sanctum.stateful'),
+            'cors_credentials' => config('cors.supports_credentials'),
+            'session_driver' => config('session.driver'),
+        ]);
     }
+}
 
     public function seedSettings()
     {
         \Illuminate\Support\Facades\Artisan::call('db:seed', ['--class' => 'SettingSeeder', '--force' => true]);
         return 'Settings Seeded Successfully!';
+        public function debugEnv()
+    {
+        return response()->json([
+            'session_domain' => config('session.domain'),
+            'sanctum_domains' => config('sanctum.stateful'),
+            'cors_credentials' => config('cors.supports_credentials'),
+            'session_driver' => config('session.driver'),
+        ]);
     }
+}
 
     public function readLogs()
     {
         $logPath = storage_path('logs/laravel.log');
         if (!file_exists($logPath)) {
             return 'No logs found.';
-        }
+            public function debugEnv()
+    {
+        return response()->json([
+            'session_domain' => config('session.domain'),
+            'sanctum_domains' => config('sanctum.stateful'),
+            'cors_credentials' => config('cors.supports_credentials'),
+            'session_driver' => config('session.driver'),
+        ]);
+    }
+}
         $content = file_get_contents($logPath);
         return response(substr($content, -300000))->header('Content-Type', 'text/plain');
+        public function debugEnv()
+    {
+        return response()->json([
+            'session_domain' => config('session.domain'),
+            'sanctum_domains' => config('sanctum.stateful'),
+            'cors_credentials' => config('cors.supports_credentials'),
+            'session_driver' => config('session.driver'),
+        ]);
     }
+}
 
     public function fixAdminRole()
     {
@@ -234,9 +324,27 @@ class PublicController extends Controller
             $user->role = 'admin';
             $user->save();
             return 'Admin role fixed! You can now login to the dashboard.';
-        }
-        return 'Admin user not found.';
+            public function debugEnv()
+    {
+        return response()->json([
+            'session_domain' => config('session.domain'),
+            'sanctum_domains' => config('sanctum.stateful'),
+            'cors_credentials' => config('cors.supports_credentials'),
+            'session_driver' => config('session.driver'),
+        ]);
     }
+}
+        return 'Admin user not found.';
+        public function debugEnv()
+    {
+        return response()->json([
+            'session_domain' => config('session.domain'),
+            'sanctum_domains' => config('sanctum.stateful'),
+            'cors_credentials' => config('cors.supports_credentials'),
+            'session_driver' => config('session.driver'),
+        ]);
+    }
+}
 
     public function clearCache()
     {
@@ -248,8 +356,26 @@ class PublicController extends Controller
             if (file_exists($path)) {
                 @unlink($path);
                 $deleted[] = $file;
-            }
-        }
+                public function debugEnv()
+    {
+        return response()->json([
+            'session_domain' => config('session.domain'),
+            'sanctum_domains' => config('sanctum.stateful'),
+            'cors_credentials' => config('cors.supports_credentials'),
+            'session_driver' => config('session.driver'),
+        ]);
+    }
+}
+            public function debugEnv()
+    {
+        return response()->json([
+            'session_domain' => config('session.domain'),
+            'sanctum_domains' => config('sanctum.stateful'),
+            'cors_credentials' => config('cors.supports_credentials'),
+            'session_driver' => config('session.driver'),
+        ]);
+    }
+}
 
         \Illuminate\Support\Facades\Artisan::call('optimize:clear');
 
@@ -257,10 +383,28 @@ class PublicController extends Controller
         $composerOutput = '';
         if (function_exists('shell_exec')) {
             $composerOutput = shell_exec('composer dump-autoload 2>&1');
-        }
+            public function debugEnv()
+    {
+        return response()->json([
+            'session_domain' => config('session.domain'),
+            'sanctum_domains' => config('sanctum.stateful'),
+            'cors_credentials' => config('cors.supports_credentials'),
+            'session_driver' => config('session.driver'),
+        ]);
+    }
+}
 
         return 'Laravel Cache Cleared and Rebuilt Successfully! Composer: ' . $composerOutput;
+        public function debugEnv()
+    {
+        return response()->json([
+            'session_domain' => config('session.domain'),
+            'sanctum_domains' => config('sanctum.stateful'),
+            'cors_credentials' => config('cors.supports_credentials'),
+            'session_driver' => config('session.driver'),
+        ]);
     }
+}
 
     public function getContract($filename)
     {
@@ -268,8 +412,35 @@ class PublicController extends Controller
         $path = storage_path('app/public/contracts/' . $filename);
         if (!file_exists($path)) {
             abort(404, 'Contract not found on server disk.');
-        }
+            public function debugEnv()
+    {
+        return response()->json([
+            'session_domain' => config('session.domain'),
+            'sanctum_domains' => config('sanctum.stateful'),
+            'cors_credentials' => config('cors.supports_credentials'),
+            'session_driver' => config('session.driver'),
+        ]);
+    }
+}
         $mime = \Illuminate\Support\Facades\File::mimeType($path);
         return response()->file($path, ['Content-Type' => $mime]);
+        public function debugEnv()
+    {
+        return response()->json([
+            'session_domain' => config('session.domain'),
+            'sanctum_domains' => config('sanctum.stateful'),
+            'cors_credentials' => config('cors.supports_credentials'),
+            'session_driver' => config('session.driver'),
+        ]);
+    }
+}
+    public function debugEnv()
+    {
+        return response()->json([
+            'session_domain' => config('session.domain'),
+            'sanctum_domains' => config('sanctum.stateful'),
+            'cors_credentials' => config('cors.supports_credentials'),
+            'session_driver' => config('session.driver'),
+        ]);
     }
 }
