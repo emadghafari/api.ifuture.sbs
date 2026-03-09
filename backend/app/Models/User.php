@@ -28,6 +28,7 @@ class User extends Authenticatable
         'passport_expiry',
         'verification_code',
         'verification_code_expires_at',
+        'google_id',
     ];
 
     /**

@@ -14,6 +14,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Support\Str;
+use Laravel\Socialite\Facades\Socialite;
 
 class AuthController extends Controller
 {
@@ -150,5 +151,57 @@ class AuthController extends Controller
         return $status === Password::PASSWORD_RESET
             ? response()->json(['message' => __($status)])
             : response()->json(['message' => __($status)], 400);
+    }
+
+    public function redirectToGoogle()
+    {
+        return response()->json([
+            'url' => Socialite::driver('google')->stateless()->redirect()->getTargetUrl(),
+        ]);
+    }
+
+    public function handleGoogleCallback()
+    {
+        try {
+            $googleUser = Socialite::driver('google')->stateless()->user();
+
+            $user = User::where('email', $googleUser->getEmail())->first();
+
+            if ($user) {
+                // If user exists but doesn't have a google_id, update them
+                if (!$user->google_id) {
+                    $user->update([
+                        'google_id' => $googleUser->getId(),
+                        'email_verified_at' => $user->email_verified_at ?? now(),
+                    ]);
+                }
+            }
+            else {
+                // Create new user if they don't exist
+                $user = User::create([
+                    'name' => $googleUser->getName(),
+                    'email' => $googleUser->getEmail(),
+                    'google_id' => $googleUser->getId(),
+                    'role' => 'investor',
+                    'email_verified_at' => now(), // Auto verify since Google verified it
+                    'password' => null, // Optional password
+                ]);
+            }
+
+            // Stateful login
+            request()->session()->regenerate();
+            Auth::login($user, true); // login and remember
+
+            // Redirect back to Next.js dashboard
+            $frontendUrl = env('FRONTEND_URL', 'https://ifuture.sbs');
+            return redirect()->to($frontendUrl . '/portal/dashboard');
+
+        }
+        catch (\Exception $e) {
+            \Log::error('Google Auth Error: ' . $e->getMessage());
+
+            $frontendUrl = env('FRONTEND_URL', 'https://ifuture.sbs');
+            return redirect()->to($frontendUrl . '/portal/login?error=Google_Auth_Failed');
+        }
     }
 }

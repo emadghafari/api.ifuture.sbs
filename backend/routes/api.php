@@ -42,6 +42,10 @@ Route::middleware([\Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreSta
             Route::get('user', [AuthController::class , 'user'])->middleware('auth:sanctum');
             Route::post('forgot-password', [AuthController::class , 'forgotPassword']);
             Route::post('reset-password', [AuthController::class , 'resetPassword']);
+
+            // Google OAuth Routes
+            Route::get('google/redirect', [AuthController::class , 'redirectToGoogle']);
+            Route::get('google/callback', [AuthController::class , 'handleGoogleCallback']);
         }
         );
 
