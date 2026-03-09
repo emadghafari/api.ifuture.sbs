@@ -9,10 +9,33 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use App\Mail\VerificationCodeMail;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Cache;
 use Carbon\Carbon;
 
 class AuthController extends Controller
 {
+    public function sendRegistrationCode(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email|max:255|unique:users,email',
+        ]);
+
+        $verification_code = rand(10000, 99999);
+
+        // Store code in cache for 15 minutes keyed by email
+        Cache::put('registration_code_' . $request->email, $verification_code, now()->addMinutes(15));
+
+        try {
+            Mail::to($request->email)->send(new VerificationCodeMail($verification_code));
+        }
+        catch (\Exception $e) {
+            \Log::error('Failed to send registration code email: ' . $e->getMessage());
+            return response()->json(['message' => 'Failed to send verification code. Please try again.'], 500);
+        }
+
+        return response()->json(['message' => 'Verification code sent successfully.']);
+    }
+
     public function register(Request $request)
     {
         $request->validate([
@@ -20,98 +43,33 @@ class AuthController extends Controller
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:6|confirmed',
             'role' => 'sometimes|string|in:admin,investor',
+            'verification_code' => 'required|string|size:5',
         ]);
 
-        $verification_code = rand(10000, 99999);
-        $expires_at = Carbon::now()->addMinutes(15);
+        $cachedCode = Cache::get('registration_code_' . $request->email);
+
+        if (!$cachedCode || $cachedCode != $request->verification_code) {
+            return response()->json([
+                'message' => 'Invalid or expired verification code.',
+                'errors' => ['verification_code' => ['Invalid or expired verification code.']]
+            ], 422);
+        }
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'role' => $request->role ?? 'investor', // default to investor
-            'verification_code' => $verification_code,
-            'verification_code_expires_at' => $expires_at,
+            'role' => $request->role ?? 'investor',
+            'email_verified_at' => now(), // verified immediately
         ]);
 
-        try {
-            Mail::to($user->email)->send(new VerificationCodeMail($verification_code));
-        }
-        catch (\Exception $e) {
-            \Log::error('Failed to send verification email: ' . $e->getMessage());
-        }
+        // clear cache
+        Cache::forget('registration_code_' . $request->email);
 
         return response()->json([
-            'message' => 'Registration successful. A verification code has been sent to your email.',
-            'requires_verification' => true
+            'message' => 'Registration successful.',
+            'user' => $user
         ], 201);
-    }
-
-    public function verifyEmail(Request $request)
-    {
-        $request->validate([
-            'email' => 'required|email',
-            'code' => 'required|string|min:5|max:5',
-        ]);
-
-        $user = User::where('email', $request->email)->first();
-
-        if (!$user) {
-            return response()->json(['message' => 'User not found.'], 404);
-        }
-
-        if ($user->email_verified_at) {
-            return response()->json(['message' => 'Email is already verified.'], 400);
-        }
-
-        if ($user->verification_code !== $request->code) {
-            return response()->json(['message' => 'Invalid verification code.'], 400);
-        }
-
-        if (Carbon::now()->isAfter($user->verification_code_expires_at)) {
-            return response()->json(['message' => 'Verification code has expired. Please request a new one.'], 400);
-        }
-
-        $user->email_verified_at = Carbon::now();
-        $user->verification_code = null;
-        $user->verification_code_expires_at = null;
-        $user->save();
-
-        return response()->json(['message' => 'Email verified successfully.']);
-    }
-
-    public function resendVerificationCode(Request $request)
-    {
-        $request->validate([
-            'email' => 'required|email',
-        ]);
-
-        $user = User::where('email', $request->email)->first();
-
-        if (!$user) {
-            return response()->json(['message' => 'User not found.'], 404);
-        }
-
-        if ($user->email_verified_at) {
-            return response()->json(['message' => 'Email is already verified.'], 400);
-        }
-
-        $verification_code = rand(10000, 99999);
-        $expires_at = Carbon::now()->addMinutes(15);
-
-        $user->verification_code = $verification_code;
-        $user->verification_code_expires_at = $expires_at;
-        $user->save();
-
-        try {
-            Mail::to($user->email)->send(new VerificationCodeMail($verification_code));
-        }
-        catch (\Exception $e) {
-            \Log::error('Failed to resent verification email: ' . $e->getMessage());
-            return response()->json(['message' => 'Failed to send email. Please try again later.'], 500);
-        }
-
-        return response()->json(['message' => 'Verification code sent successfully.']);
     }
 
     public function login(Request $request)
