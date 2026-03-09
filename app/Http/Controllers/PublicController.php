@@ -242,7 +242,14 @@ class PublicController extends Controller
     {
         \Illuminate\Support\Facades\Artisan::call('optimize:clear');
         \Illuminate\Support\Facades\Artisan::call('optimize');
-        return 'Laravel Cache Cleared and Rebuilt Successfully!';
+
+        // Attempt to run composer dump-autoload
+        $composerOutput = '';
+        if (function_exists('shell_exec')) {
+            $composerOutput = shell_exec('composer dump-autoload 2>&1');
+        }
+
+        return 'Laravel Cache Cleared and Rebuilt Successfully! Composer: ' . $composerOutput;
     }
 
     public function getContract($filename)
