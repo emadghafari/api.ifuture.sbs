@@ -30,6 +30,7 @@ Route::prefix('public')->group(function () {
     Route::get('read-logs', [PublicController::class , 'readLogs']);
     Route::get('fix-admin', [PublicController::class , 'fixAdminRole']);
     Route::get('clear-cache', [PublicController::class , 'clearCache']);
+    Route::get('debug-routes', [PublicController::class , 'debugRoutes']);
 });
 
 // Google OAuth Routes (No authentication required to initiate)
