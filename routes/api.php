@@ -37,6 +37,8 @@ Route::middleware([\Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreSta
     Route::prefix('auth')->group(function () {
             Route::post('register', [AuthController::class , 'register']);
             Route::post('login', [AuthController::class , 'login']);
+            Route::post('verify-email', [AuthController::class , 'verifyEmail']);
+            Route::post('resend-verification', [AuthController::class , 'resendVerificationCode']);
             Route::post('logout', [AuthController::class , 'logout'])->middleware('auth:sanctum');
             Route::get('user', [AuthController::class , 'user'])->middleware('auth:sanctum');
         }

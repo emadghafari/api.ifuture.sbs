@@ -26,6 +26,8 @@ class User extends Authenticatable
         'passport_path',
         'passport_number',
         'passport_expiry',
+        'verification_code',
+        'verification_code_expires_at',
     ];
 
     /**
@@ -36,6 +38,7 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+        'verification_code',
     ];
 
     /**
