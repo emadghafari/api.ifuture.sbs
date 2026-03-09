@@ -30,6 +30,7 @@ Route::prefix('public')->group(function () {
     Route::get('read-logs', [PublicController::class , 'readLogs']);
     Route::get('fix-admin', [PublicController::class , 'fixAdminRole']);
     Route::get('clear-cache', [PublicController::class , 'clearCache']);
+    Route::get('debug-routes', [PublicController::class , 'debugRoutes']);
 });
 
 // Google OAuth Routes (No authentication required to initiate)
@@ -42,6 +43,7 @@ Route::middleware([\Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreSta
             Route::post('register', [AuthController::class , 'register']);
             Route::post('send-registration-code', [AuthController::class , 'sendRegistrationCode']);
             Route::post('login', [AuthController::class , 'login']);
+            Route::post('login-verify', [AuthController::class , 'verifyLogin']);
             Route::post('logout', [AuthController::class , 'logout'])->middleware('auth:sanctum');
             Route::get('user', [AuthController::class , 'user'])->middleware('auth:sanctum');
             Route::post('forgot-password', [AuthController::class , 'forgotPassword']);
