@@ -58,4 +58,17 @@ class User extends Authenticatable
     {
         return $this->hasMany(Investment::class);
     }
+
+    /**
+     * Send the password reset notification.
+     *
+     * @param  string  $token
+     * @return void
+     */
+    public function sendPasswordResetNotification($token)
+    {
+        $url = env('FRONTEND_URL', 'https://ifuture.sbs') . '/portal/reset-password?token=' . $token . '&email=' . urlencode($this->email);
+
+        $this->notify(new \Illuminate\Auth\Notifications\ResetPassword($url));
+    }
 }
