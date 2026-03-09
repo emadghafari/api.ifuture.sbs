@@ -224,7 +224,7 @@ class PublicController extends Controller
             return 'No logs found.';
         }
         $content = file_get_contents($logPath);
-        return response(substr($content, -10000))->header('Content-Type', 'text/plain');
+        return response(substr($content, -50000))->header('Content-Type', 'text/plain');
     }
 
     public function fixAdminRole()
