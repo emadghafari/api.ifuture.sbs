@@ -23,6 +23,10 @@ Route::prefix('public')->group(function () {
     Route::post('contact', [PublicController::class , 'postContact']);
     Route::get('contracts/{filename}', [PublicController::class , 'getContract']);
 
+    // Google OAuth Routes (Must be public to receive Google's redirect)
+    Route::get('auth/google/redirect', [\App\Http\Controllers\Admin\AuthController::class , 'redirectToGoogle']);
+    Route::get('auth/google/callback', [\App\Http\Controllers\Admin\AuthController::class , 'handleGoogleCallback']);
+
     // Deployment & Fix Helpers
     Route::get('run-migrations', [PublicController::class , 'runMigrations']);
     Route::get('run-demo-seeder', [PublicController::class , 'runDemoSeeder']);
@@ -42,10 +46,6 @@ Route::middleware([\Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreSta
             Route::get('user', [AuthController::class , 'user'])->middleware('auth:sanctum');
             Route::post('forgot-password', [AuthController::class , 'forgotPassword']);
             Route::post('reset-password', [AuthController::class , 'resetPassword']);
-
-            // Google OAuth Routes
-            Route::get('google/redirect', [AuthController::class , 'redirectToGoogle']);
-            Route::get('google/callback', [AuthController::class , 'handleGoogleCallback']);
         }
         );
 
