@@ -88,17 +88,63 @@ class AuthController extends Controller
             'password' => 'required',
         ]);
 
-        $user = User::where('email', $request->email)->first();
-        if ($user && !$user->email_verified_at) {
+        if (Auth::validate($credentials)) {
+            $verification_code = rand(10000, 99999);
+
+            // Store code in cache for 15 minutes keyed by email
+            Cache::put('login_code_' . $request->email, $verification_code, now()->addMinutes(15));
+
+            try {
+                Mail::to($request->email)->send(new VerificationCodeMail($verification_code));
+            }
+            catch (\Exception $e) {
+                \Log::error('Failed to send login code email: ' . $e->getMessage() . ' Trace: ' . $e->getTraceAsString());
+                return response()->json([
+                    'message' => 'Failed to send verification code. ' . $e->getMessage(),
+                ], 500);
+            }
+
             return response()->json([
-                'message' => 'Please verify your email address before logging in.',
-                'requires_verification' => true
-            ], 403);
+                'message' => 'Verification code sent to email.',
+                'requires_2fa' => true
+            ]);
         }
 
+        return response()->json(['message' => 'Invalid credentials.'], 401);
+    }
+
+    public function verifyLogin(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required',
+            'code' => 'required|string|size:5',
+        ]);
+
+        $cachedCode = Cache::get('login_code_' . $request->email);
+
+        if (!$cachedCode || $cachedCode != $request->code) {
+            return response()->json([
+                'message' => 'Invalid or expired verification code.',
+                'errors' => ['code' => ['Invalid or expired verification code.']]
+            ], 422);
+        }
+
+        $credentials = $request->only('email', 'password');
+
         if (Auth::attempt($credentials)) {
+            $user = Auth::user();
+
+            // Auto-verify email if this is their first time logging in this way
+            if (!$user->email_verified_at) {
+                $user->email_verified_at = now();
+                $user->save();
+            }
+
+            Cache::forget('login_code_' . $request->email);
+
             $request->session()->regenerate();
-            return response()->json(['message' => 'Logged in successfully.', 'user' => Auth::user()]);
+            return response()->json(['message' => 'Logged in successfully.', 'user' => $user]);
         }
 
         return response()->json(['message' => 'Invalid credentials.'], 401);

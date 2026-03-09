@@ -43,6 +43,7 @@ Route::middleware([\Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreSta
             Route::post('register', [AuthController::class , 'register']);
             Route::post('send-registration-code', [AuthController::class , 'sendRegistrationCode']);
             Route::post('login', [AuthController::class , 'login']);
+            Route::post('login-verify', [AuthController::class , 'verifyLogin']);
             Route::post('logout', [AuthController::class , 'logout'])->middleware('auth:sanctum');
             Route::get('user', [AuthController::class , 'user'])->middleware('auth:sanctum');
             Route::post('forgot-password', [AuthController::class , 'forgotPassword']);
