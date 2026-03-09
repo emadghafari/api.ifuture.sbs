@@ -23,10 +23,6 @@ Route::prefix('public')->group(function () {
     Route::post('contact', [PublicController::class , 'postContact']);
     Route::get('contracts/{filename}', [PublicController::class , 'getContract']);
 
-    // Google OAuth Routes (Must be public to receive Google's redirect)
-    Route::get('auth/google/redirect', [\App\Http\Controllers\Admin\AuthController::class , 'redirectToGoogle']);
-    Route::get('auth/google/callback', [\App\Http\Controllers\Admin\AuthController::class , 'handleGoogleCallback']);
-
     // Deployment & Fix Helpers
     Route::get('run-migrations', [PublicController::class , 'runMigrations']);
     Route::get('run-demo-seeder', [PublicController::class , 'runDemoSeeder']);
@@ -35,6 +31,10 @@ Route::prefix('public')->group(function () {
     Route::get('fix-admin', [PublicController::class , 'fixAdminRole']);
     Route::get('clear-cache', [PublicController::class , 'clearCache']);
 });
+
+// Google OAuth Routes (No authentication required to initiate)
+Route::get('auth/google/redirect', [\App\Http\Controllers\Admin\AuthController::class , 'redirectToGoogle']);
+Route::get('auth/google/callback', [\App\Http\Controllers\Admin\AuthController::class , 'handleGoogleCallback']);
 
 Route::middleware([\Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class])->group(function () {
     // Admin Auth
