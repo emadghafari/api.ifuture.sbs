@@ -240,8 +240,18 @@ class PublicController extends Controller
 
     public function clearCache()
     {
+        // Force delete Laravel bootstrap cache files since Artisan clear sometimes fails on shared hosting
+        $cacheFiles = ['config.php', 'events.php', 'packages.php', 'routes.php', 'services.php'];
+        $deleted = [];
+        foreach ($cacheFiles as $file) {
+            $path = base_path('bootstrap/cache/' . $file);
+            if (file_exists($path)) {
+                @unlink($path);
+                $deleted[] = $file;
+            }
+        }
+
         \Illuminate\Support\Facades\Artisan::call('optimize:clear');
-        \Illuminate\Support\Facades\Artisan::call('optimize');
 
         // Attempt to run composer dump-autoload
         $composerOutput = '';
