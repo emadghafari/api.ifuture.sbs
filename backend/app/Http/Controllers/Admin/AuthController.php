@@ -29,8 +29,8 @@ class AuthController extends Controller
             Mail::to($request->email)->send(new VerificationCodeMail($verification_code));
         }
         catch (\Exception $e) {
-            \Log::error('Failed to send registration code email: ' . $e->getMessage());
-            return response()->json(['message' => 'Failed to send verification code. Please try again.'], 500);
+            \Log::error('Failed to send registration code email: ' . $e->getMessage() . ' Trace: ' . $e->getTraceAsString());
+            return response()->json(['message' => 'Failed to send verification code. ' . $e->getMessage()], 500);
         }
 
         return response()->json(['message' => 'Verification code sent successfully.']);
