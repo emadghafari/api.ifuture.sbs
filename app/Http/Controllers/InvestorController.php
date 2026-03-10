@@ -4,6 +4,13 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Investment;
+use App\Mail\InvestmentConfirmedAdmin;
+use App\Mail\InvestmentConfirmedInvestor;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
+use Mccarlosen\LaravelMpdf\Facades\LaravelMpdf;
+use Carbon\Carbon;
 
 class InvestorController extends Controller
 {
@@ -46,7 +53,7 @@ class InvestorController extends Controller
             'phone' => 'nullable|string|max:50',
             'passport_file' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:10240',
             'passport_number' => 'nullable|string|max:100',
-            'passport_expiry' => 'nullable|date',
+            'passport_expiry' => 'nullable|date|date_format:Y-m-d',
         ]);
 
         $investorId = $request->user()->id;
@@ -80,7 +87,17 @@ class InvestorController extends Controller
         }
 
         if ($request->filled('passport_expiry')) {
-            $user->passport_expiry = $request->input('passport_expiry');
+            $expiryInput = $request->input('passport_expiry');
+            try {
+                $parsedDate = \Carbon\Carbon::parse($expiryInput);
+                if ($parsedDate->year > 2100 || $parsedDate->year < 1900) {
+                    return response()->json(['message' => 'Invalid passport expiry year provided.'], 400);
+                }
+                $user->passport_expiry = $parsedDate->format('Y-m-d');
+            }
+            catch (\Exception $e) {
+                return response()->json(['message' => 'Invalid passport expiry date format.'], 400);
+            }
         }
 
         $user->save();
