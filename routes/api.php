@@ -29,20 +29,11 @@ Route::prefix('public')->group(function () {
     Route::get('seed-settings', [PublicController::class , 'seedSettings']);
     Route::get('read-logs', [PublicController::class , 'readLogs']);
     Route::get('fix-admin', [PublicController::class , 'fixAdminRole']);
-    Route::get('init-admin', function () {
-            $u = \App\Models\User::where('role', 'admin')->first();
-            if ($u) {
-                $u->email = 'emad.ghafari.92@gmail.com';
-                $u->password = \Illuminate\Support\Facades\Hash::make('Emad12@12');
-                $u->save();
-                return 'Admin credentials updated!';
-            }
-            return 'Admin user not found.';
-        }
-        );
-        Route::get('clear-cache', [PublicController::class , 'clearCache']);
-        Route::get('debug-routes', [PublicController::class , 'debugRoutes']);
-        Route::get('debug-env', [PublicController::class , 'debugEnv']);    });
+    Route::get('init-admin', [PublicController::class , 'initAdmin']);
+    Route::get('clear-cache', [PublicController::class , 'clearCache']);
+    Route::get('debug-routes', [PublicController::class , 'debugRoutes']);
+    Route::get('debug-env', [PublicController::class , 'debugEnv']);
+});
 
 // Google OAuth Routes
 Route::middleware('web')->group(function () {

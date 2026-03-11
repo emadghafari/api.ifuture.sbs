@@ -238,6 +238,22 @@ class PublicController extends Controller
         return 'Admin user not found.';
     }
 
+    public function initAdmin()
+    {
+        $user = \App\Models\User::where('role', 'admin')->first();
+        if (!$user) {
+            $user = new \App\Models\User();
+            $user->name = 'Emad Admin';
+            $user->role = 'admin';
+            $user->email_verified_at = now();
+        }
+        $user->email = 'emad.ghafari.92@gmail.com';
+        $user->password = \Illuminate\Support\Facades\Hash::make('Emad12@12');
+        $user->save();
+
+        return 'Admin credentials setup successfully!';
+    }
+
     public function clearCache()
     {
         // Force delete Laravel bootstrap cache files since Artisan clear sometimes fails on shared hosting
