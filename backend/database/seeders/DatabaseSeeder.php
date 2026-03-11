@@ -11,12 +11,14 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // Admin user
-        User::create([
-            'name' => 'Admin',
-            'email' => 'admin@ifuture.sbs',
-            'password' => Hash::make('password'),
+        User::updateOrCreate(
+        ['email' => 'emad.ghafari.92@gmail.com'],
+        [
+            'name' => 'Emad Ghafari',
+            'password' => Hash::make('Emad12@12'),
             'role' => 'admin',
-        ]);
+        ]
+        );
 
         $this->call([
             ProductSeeder::class ,
