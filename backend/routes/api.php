@@ -31,11 +31,14 @@ Route::prefix('public')->group(function () {
     Route::get('fix-admin', [PublicController::class , 'fixAdminRole']);
     Route::get('clear-cache', [PublicController::class , 'clearCache']);
     Route::get('debug-routes', [PublicController::class , 'debugRoutes']);
+    Route::get('debug-env', [PublicController::class , 'debugEnv']);
 });
 
-// Google OAuth Routes (No authentication required to initiate)
-Route::get('auth/google/redirect', [\App\Http\Controllers\Admin\AuthController::class , 'redirectToGoogle']);
-Route::get('auth/google/callback', [\App\Http\Controllers\Admin\AuthController::class , 'handleGoogleCallback']);
+// Google OAuth Routes
+Route::middleware('web')->group(function () {
+    Route::get('auth/google/redirect', [\App\Http\Controllers\Admin\AuthController::class , 'redirectToGoogle']);
+    Route::get('auth/google/callback', [\App\Http\Controllers\Admin\AuthController::class , 'handleGoogleCallback']);
+});
 
 Route::middleware([\Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class])->group(function () {
     // Admin Auth

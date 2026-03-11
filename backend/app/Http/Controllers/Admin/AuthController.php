@@ -245,7 +245,8 @@ class AuthController extends Controller
             \Log::error('Google Auth Error: ' . $e->getMessage());
 
             $frontendUrl = env('FRONTEND_URL', 'https://ifuture.sbs');
-            return redirect()->to($frontendUrl . '/portal/login?error=Google_Auth_Failed');
+            $errorMessage = urlencode($e->getMessage());
+            return redirect()->to($frontendUrl . '/portal/login?error=Google_Auth_Failed&details=' . $errorMessage);
         }
     }
 }

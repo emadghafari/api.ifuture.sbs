@@ -272,4 +272,14 @@ class PublicController extends Controller
         $mime = \Illuminate\Support\Facades\File::mimeType($path);
         return response()->file($path, ['Content-Type' => $mime]);
     }
+
+    public function debugEnv()
+    {
+        return response()->json([
+            'session_domain' => config('session.domain'),
+            'sanctum_domains' => config('sanctum.stateful'),
+            'cors_credentials' => config('cors.supports_credentials'),
+            'session_driver' => config('session.driver'),
+        ]);
+    }
 }

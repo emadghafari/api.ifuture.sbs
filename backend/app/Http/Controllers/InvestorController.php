@@ -4,6 +4,13 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Investment;
+use App\Mail\InvestmentConfirmedAdmin;
+use App\Mail\InvestmentConfirmedInvestor;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
+use Mccarlosen\LaravelMpdf\Facades\LaravelMpdf;
+use Carbon\Carbon;
 
 class InvestorController extends Controller
 {
@@ -46,7 +53,7 @@ class InvestorController extends Controller
             'phone' => 'nullable|string|max:50',
             'passport_file' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:10240',
             'passport_number' => 'nullable|string|max:100',
-            'passport_expiry' => 'nullable|date',
+            'passport_expiry' => 'nullable|date|date_format:Y-m-d',
         ]);
 
         $investorId = $request->user()->id;
@@ -80,7 +87,17 @@ class InvestorController extends Controller
         }
 
         if ($request->filled('passport_expiry')) {
-            $user->passport_expiry = $request->input('passport_expiry');
+            $expiryInput = $request->input('passport_expiry');
+            try {
+                $parsedDate = \Carbon\Carbon::parse($expiryInput);
+                if ($parsedDate->year > 2100 || $parsedDate->year < 1900) {
+                    return response()->json(['message' => 'Invalid passport expiry year provided.'], 400);
+                }
+                $user->passport_expiry = $parsedDate->format('Y-m-d');
+            }
+            catch (\Exception $e) {
+                return response()->json(['message' => 'Invalid passport expiry date format.'], 400);
+            }
         }
 
         $user->save();
@@ -130,6 +147,34 @@ class InvestorController extends Controller
 
             $filename = 'contract_' . $investment->id . '_' . time() . '.pdf';
             \Illuminate\Support\Facades\Storage::disk('public')->put('contracts/' . $filename, $pdf->output());
+
+            // Generate Invoice PDF
+            $invoiceData = [
+                'DATE' => now()->format('Y-m-d'),
+                'INVESTOR_NAME' => $user->name,
+                'INVESTOR_ID' => $user->passport_number ?? $user->id,
+                'INVESTOR_EMAIL' => $user->email,
+                'INVOICE_NUMBER' => str_pad($investment->id, 5, '0', STR_PAD_LEFT) . strtoupper(substr(uniqid(), -4)),
+                'GATEWAY' => $investment->gateway ?? 'stripe',
+                'TRANSACTION_ID' => $investment->transaction_id ?? 'N/A',
+                'PROJECT_NAME' => $investment->project->title,
+                'SHARES' => $investment->shares,
+                'AMOUNT' => $investment->amount,
+            ];
+
+            $invoicePdf = \Mccarlosen\LaravelMpdf\Facades\LaravelMpdf::loadView('contracts.invoice', $invoiceData, [], [
+                'format' => 'A4',
+                'orientation' => 'P',
+                'title' => 'Purchase Invoice',
+                'author' => 'iFuture SBS',
+                'autoArabic' => true,
+                'autoLangToFont' => true,
+                'autoScriptToLang' => true,
+            ]);
+
+            $invoiceFilename = 'invoice_' . $investment->id . '_' . time() . '.pdf';
+            \Illuminate\Support\Facades\Storage::disk('public')->put('invoices/' . $invoiceFilename, $invoicePdf->output());
+
         }
         catch (\Throwable $e) {
             // Catch any Fatal errors or exceptions (like memory limit or file permissions)
@@ -140,8 +185,32 @@ class InvestorController extends Controller
 
         $investment->digital_signature = $signature;
         $investment->contract_pdf_path = '/api/public/contracts/' . $filename;
+        $investment->invoice_pdf_path = '/api/public/invoices/' . $invoiceFilename;
         $investment->signed_at = now();
         $investment->save();
+
+        // Dispatch Confirmation Emails
+        try {
+            $contractAbsPath = storage_path('app/public/contracts/' . $filename);
+            $invoiceAbsPath = storage_path('app/public/invoices/' . $invoiceFilename);
+
+            // Send Investor Email
+            \Illuminate\Support\Facades\Mail::to($user->email)->send(
+                new \App\Mail\InvestmentConfirmedInvestor($investment, $contractAbsPath, $invoiceAbsPath)
+            );
+
+            // Send Admin Email
+            $adminEmails = \App\Models\User::where('role', 'admin')->pluck('email');
+            if ($adminEmails->count() > 0) {
+                \Illuminate\Support\Facades\Mail::to($adminEmails)->send(
+                    new \App\Mail\InvestmentConfirmedAdmin($investment, $contractAbsPath, $invoiceAbsPath)
+                );
+            }
+        }
+        catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Mailing Error: ' . $e->getMessage());
+        // Do not block the user response if mailing fails.
+        }
 
         return response()->json([
             'success' => true,

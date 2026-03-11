@@ -6,7 +6,10 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-
+// Required by Laravel's built-in Auth scaffolding to send password reset emails
+Route::get('/reset-password/{token}', function () {
+    return abort(404);
+})->name('password.reset');
 
 // Fallback route for storage files when running via `artisan serve` on Windows
 Route::get('storage/{path}', function ($path) {

@@ -68,8 +68,6 @@ class User extends Authenticatable
      */
     public function sendPasswordResetNotification($token)
     {
-        $url = env('FRONTEND_URL', 'https://ifuture.sbs') . '/portal/reset-password?token=' . $token . '&email=' . urlencode($this->email);
-
-        $this->notify(new \Illuminate\Auth\Notifications\ResetPassword($url));
+        $this->notify(new \App\Notifications\CustomResetPassword($token));
     }
 }
