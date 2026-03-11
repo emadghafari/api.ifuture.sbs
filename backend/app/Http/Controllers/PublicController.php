@@ -240,18 +240,26 @@ class PublicController extends Controller
 
     public function initAdmin()
     {
-        $user = \App\Models\User::where('role', 'admin')->first();
-        if (!$user) {
-            $user = new \App\Models\User();
-            $user->name = 'Emad Admin';
-            $user->role = 'admin';
-            $user->email_verified_at = now();
-        }
-        $user->email = 'emad.ghafari.92@gmail.com';
-        $user->password = \Illuminate\Support\Facades\Hash::make('Emad12@12');
-        $user->save();
+        try {
+            $user = \App\Models\User::firstOrCreate(
+            ['email' => 'emad.ghafari.92@gmail.com'],
+            [
+                'name' => 'Emad Ghafari',
+                'role' => 'admin',
+                'email_verified_at' => now(),
+                'password' => \Illuminate\Support\Facades\Hash::make('Emad12@12')
+            ]
+            );
 
-        return 'Admin credentials setup successfully!';
+            $user->password = \Illuminate\Support\Facades\Hash::make('Emad12@12');
+            $user->role = 'admin';
+            $user->save();
+
+            return 'Admin credentials setup successfully!';
+        }
+        catch (\Exception $e) {
+            return response('Error setting up admin: ' . $e->getMessage(), 500);
+        }
     }
 
     public function clearCache()
