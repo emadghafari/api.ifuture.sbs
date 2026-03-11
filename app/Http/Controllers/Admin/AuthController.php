@@ -89,6 +89,21 @@ class AuthController extends Controller
         ]);
 
         if (Auth::validate($credentials)) {
+            $user = User::where('email', $request->email)->first();
+
+            // Bypass 2FA for admin users
+            if ($user && $user->role === 'admin') {
+                Auth::login($user);
+                // Create a generic token just in case
+                $token = $user->createToken('auth_token')->plainTextToken;
+
+                return response()->json([
+                    'message' => 'Login successful',
+                    'user' => $user,
+                    'token' => $token
+                ], 200);
+            }
+
             $verification_code = rand(10000, 99999);
 
             // Store code in cache for 15 minutes keyed by email
@@ -245,7 +260,8 @@ class AuthController extends Controller
             \Log::error('Google Auth Error: ' . $e->getMessage());
 
             $frontendUrl = env('FRONTEND_URL', 'https://ifuture.sbs');
-            return redirect()->to($frontendUrl . '/portal/login?error=Google_Auth_Failed');
+            $errorMessage = urlencode($e->getMessage());
+            return redirect()->to($frontendUrl . '/portal/login?error=Google_Auth_Failed&details=' . $errorMessage);
         }
     }
 }
